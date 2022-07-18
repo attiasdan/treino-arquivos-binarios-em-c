@@ -80,7 +80,7 @@ int abrirArquivoLeitura(char arquivo[20]) {
 int abrirArquivoEscrita(char arquivo[20]) {
 	FILE *fp;
 	
-	fp = fopen(arquivo, "wb");
+	fp = fopen(arquivo, "ab");
 	
 	if (!fp) {
 		printf("Nao foi possivel abrir o arquivo para escrita");
@@ -99,7 +99,7 @@ void printarTodoArquivo(char arquivo[20])
 	
 	Cliente auxCliente;
 	
-	while ( fread(&auxCliente, sizeof(char), 1, arquivo) ) {
+	while ( fread(&auxCliente, sizeof(Cliente), 1, arquivo) ) {
 		printf("%d", auxCliente.id);
 		printf("%s", auxCliente.nome);
 		printf("%s", auxCliente.telefone);
