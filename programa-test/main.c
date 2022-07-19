@@ -108,23 +108,31 @@ int abrirArquivoEscrita() {
 	
 	return 0;
 }
-void printarTodoArquivo()
-{
+void exibirProdutos()
+{ //exibicao sequencial
 	FILE *arquivo;
 	
-	arquivo = fopen("credit.dat", "rb");
+	arquivo = fopen("produtos.dat", "rb");
 	
 	if (!arquivo) {
 		printf("Nao foi possivel abrir o arquivo para leitura");
 	}
 	
-	Cliente auxCliente;
+//	Cliente auxCliente;
 	
-	while ( fread(&auxCliente, sizeof(Cliente), 1, arquivo) > 0 ) {
-		printf("%d", auxCliente.codigo);
-		printf("%s", auxCliente.nome);
-		printf("%s", auxCliente.telefone);
-		printf("%s", auxCliente.endereco);
+//	while ( fread(&auxCliente, sizeof(Cliente), 1, arquivo) > 0 ) {
+//		printf("%d", auxCliente.codigo);
+//		printf("%s", auxCliente.nome);
+//		printf("%s", auxCliente.telefone);
+//		printf("%s", auxCliente.endereco);
+//	}
+	Produto auxProduto;
+	
+	while ( fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0 ) {
+		printf("%d", auxProduto.codigo);
+		printf("%s", auxProduto.nome);
+		printf("%d", auxProduto.quantidade);
+		printf("%f", auxProduto.valor);
 	}
 	fclose(arquivo);
 }
@@ -150,6 +158,7 @@ void menu()
         printf("11 - Consultar 1(uma) venda\n");
         printf("12 - Editar 1(uma) venda\n\n");
     	
+    	printf("13 - Exibir todos os produtos cadastrados");
         printf("0 - FECHAR PROGRAMA\n\n");
         
         printf("OPCAO?\n> ");
@@ -162,6 +171,9 @@ void menu()
                 break;
             case 2:
                 break;
+            case 13:
+            	exibirProdutos();
+            	break;
         }
     } while(op!=0);
 }
@@ -233,45 +245,47 @@ int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
 }
 
 void inserirProduto() {
-	//1º solicitar o codigo
-		//2º verificar se o codigo ja existe no respectivo arquivo de indice
-			//fazer pesquisa binaria no proprio arquivo:
-				//obter o tamanho do arquivo (atributos.c)
-				//obter o registro do meio
-				//pesquisar chave atï¿½ encontrar cï¿½digo ou finalizar a pesquisa
-		//caso jï¿½ exista o cï¿½digo, informar o cï¿½digo que jï¿½ foi cadastrado.
-		//nï¿½o existindo o cï¿½digo:
+		//fazer pesquisa binaria no proprio arquivo de indice:
+			//obter o registro do meio
+			//pesquisar chave ate encontrar cï¿½digo ou finalizar a pesquisa
+		//caso ja exista o codigo, informar o cï¿½digo que jï¿½ foi cadastrado.
+		//nao existindo o codigo:
 			//solicitar ao usuï¿½rio as demais informaï¿½ï¿½es
 			//inserir no final do arquivo de dados respectivo
 			//inserir no arquivo de ï¿½ndice informando o cï¿½digo e a posiï¿½ï¿½o no arquivo de dados
 				//inserir no final do arquivo
-				//usar o mï¿½todo da bolha para ordenaï¿½ï¿½o do arquivo de ï¿½ndice
-	
-	int codigo = 0;
-	int continuar;
+				//usar o mï¿½todo da bolha para ordenacao do arquivo de indice
 	Produto auxProduto;
+	
 	FILE *arquivo;
-	
 	arquivo = fopen("produtos.dat", "ab");
-	
 	if (!arquivo) {
-		printf("Nao foi possivel abrir o arquivo 'produtos.dat' ");
+		printf("Nao foi possivel abrir o arquivo ´produtos.dat´");
 		return ;
 	}
-
-	printf("Entre com o codigo do registro de produto:\n> ");
-	scanf("%d", &codigo);
 	
-	do {
-		fflush(stdin); //limpar buffer do teclado
-		
-		system("cls");
-		
-		printf("Nome: ");
-		gets(auxProduto.nome);
-		
-		fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
-	} while(continuar);
+	printf("Voce escolheu a opcao de inserir dados para novo Produto");
+	
+	fflush(stdin); //limpar buffer do teclado
+	printf("Codigo do Novo Produto:\n> ");
+	scanf("%d", &auxProduto.codigo);
+	
+	//verificar se o codigo ja existe no arquivo 'indice_produtos.dat'
+	//se existir informar que ja existe um produto com esse codigo
+	
+	fflush(stdin);
+	printf("Nome do Novo Produto:\n> ");
+	gets(auxProduto.nome);
+	
+	fflush(stdin);
+	printf("Quantidade do Novo Produto:\n> ");
+	scanf("%d", &auxProduto.quantidade);
+	
+	fflush(stdin);
+	printf("Preco do Novo Produto:\n> ");
+	scanf("%f", &auxProduto.valor);
+	
+	fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
 }
 void atualizar() {
 //alteracao de registro
