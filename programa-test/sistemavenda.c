@@ -6,7 +6,6 @@
 #include <ctype.h>
 #include <time.h>
 #include <sys/stat.h>
-#include <math.h>
 #include "sistemavenda.h"
 
 const char *arqProdutos = "produtos.dat";
@@ -32,24 +31,23 @@ void menu()
     do {
     	system("cls");
     	printf("Bem vindo(a)!\n\nSelecione uma opcao do menu, digitando o numero e, logo em seguida, pressione a tecla ENTER\n\n");
-        printf("1 - Cadastrar 1(um) produto\n");
-//        printf("2 - Excluir 1(um) produto\n");
-//        printf("3 - Consultar 1(um) produto\n");
-//        printf("4 - Editar 1(um) produto\n");
-//		printf("5 - Cadastrar 1(um) cliente\n");
+        printf("(ok) 1 - Cadastrar 1(um) produto\n");
+        printf("2 - Excluir 1(um) produto\n");
+        printf("3 - Consultar 1(um) produto\n");
+        printf("(fazendo) 4 - Editar 1(um) produto\n");
+		printf("5 - Cadastrar 1(um) cliente\n");
 //        printf("6 - Excluir 1(um) cliente\n");
 //        printf("7 - Consultar 1(um) cliente\n");
 //        printf("8 - Editar 1(um) cliente\n");
-//        
 //		printf("9 - Cadastrar 1(uma) venda\n");
 //        printf("10 - Excluir 1(uma) venda\n");
 //        printf("11 - Consultar 1(uma) venda\n");
 //        printf("12 - Editar 1(uma) venda\n");
-    	printf("13 - Exibir todos os produtos cadastrados\n\n");
-    	printf("14 - Exibir indices dos produtos cadastrados\n\n");
-    	printf("16 - Consultar produto pelo codigo no arquivo 'indice_produtos.dat'\n\n");
-    	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ em Bytes e quantidade de registros\n\n");
-        printf("0 - FECHAR PROGRAMA\n\n");
+    	printf("(ok) 13 - Exibir todos os produtos cadastrados\n\n");
+    	printf("(ok) 14 - Exibir indices dos produtos cadastrados\n\n");
+    	printf("(ok) 16 - Consultar produto pelo codigo no arquivo 'indice_produtos.dat'\n\n");
+    	printf("(ok) 20 - Exibir tamanho do arquivo de ´produtos.dat´ em Bytes e quantidade de registros\n\n");
+        printf("(ok) 0 - FECHAR PROGRAMA\n\n");
         printf("OPCAO?\n> ");
         scanf("%d", &op);
         
@@ -135,6 +133,12 @@ int tamanhoArquivo(const char *filename)
     }
 	return sb.st_size;
 }
+int solicitarCodigo() {
+	int cod = -1;
+	printf("Entre com o codigo do registro:\n> ");
+	scanf("%d", &cod);
+	return cod;
+}
 int consultaIndiceProduto(const char *filename, int chave)
 {//busca binaria por indice
 
@@ -144,73 +148,39 @@ int consultaIndiceProduto(const char *filename, int chave)
 	
 	if (!fp)
 		printf("Nao foi possivel abrir o arquivo");
-	
+		
+	//busca:
 	int inicio, meio, fim;
-	
+	inicio = 0;
 	Indice aux;
 	
-	inicio = 0;
-	
-//	fseek(fp, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
-	
 	fim = (tamanhoArquivo(filename) / sizeof(Indice)) - 1;
-	
-	printf("\nAntes do loop\ninicio = %d\n", inicio);
-	printf("meio = %d\n", meio);
-	printf("fim = %d\n", fim);
-	printf("--------------------------\n");
 	
 	while (inicio <= fim)
 	{
 		meio = (inicio + fim) / 2;
-		
-		printf("inicio = %d\n", inicio);
-		printf("meio = %d\n", meio);
-		printf("fim = %d\n", fim);
-		printf("--------------------------\n");
-		
+
 		fseek(fp, meio * sizeof(Indice), SEEK_SET);
 		
 		fread(&aux, sizeof(Indice), 1, fp);
 		
 		if (chave > aux.indice) {
 			inicio = meio + 1;
-			printf("inicio = %d\n", inicio);
-			printf("meio = %d\n", meio);
-			printf("fim = %d\n", fim);
-			printf("--------------------------\n");
 		}
 		else {
 			if (chave < aux.indice) {
 				fim = meio - 1;
-				printf("inicio = %d\n", inicio);
-				printf("meio = %d\n", meio);
-				printf("fim = %d\n", fim);
-				printf("--------------------------\n");
 			}
 			else {
 				return aux.posicao;
 			}
 		}
 	}
-	printf("Ultimo caso - nao encontrado\ninicio = %d\n", inicio);
-	printf("meio = %d\n", meio);
-	printf("fim = %d\n", fim);
-	printf("--------------------------\n");
 	return -1;
 }
 
 void inserirProduto() {
-//fazer pesquisa binaria no proprio arquivo de indice:
-	//obter o registro do meio
-	//pesquisar chave ate encontrar codigo ou finalizar a pesquisa
-//caso ja exista o codigo, informar o codigo que ja foi cadastrado.
-//nao existindo o codigo:
-	//solicitar ao usuario as demais informacoes
-	//inserir no final do arquivo de dados respectivo
-	//inserir no arquivo de indice informando o codigo e a posicao no arquivo de dados
-		//inserir no final do arquivo
-		//usar o metodo da bolha para ordenacao do arquivo de indice
+	//usar o metodo da bolha para ordenacao do arquivo de indice
 	
 	Produto auxProduto;
 	Indice auxIndice;
@@ -230,9 +200,20 @@ void inserirProduto() {
 	
 	printf("Voce escolheu a opcao de inserir dados para novo Produto\n\n");
 	
-	printf("Codigo do Novo Produto:\n> ");
-	fflush(stdin); //limpar buffer do teclado
-	scanf("%d", &auxProduto.codigo);
+	int volta = 1;
+	do {
+		printf("\nCodigo do Novo Produto:\n> ");
+		fflush(stdin); //limpar buffer do teclado
+		scanf("%d", &auxProduto.codigo);
+		
+		if (consultaIndiceProduto(arqIndiceProdutos, auxProduto.codigo) != -1) {
+			printf("Codigo indisponivel, tente outro...\n");
+			volta = 1;
+		} else {
+			volta = 0;
+		}
+	} while (volta);
+	
 	
 	//verificar se o codigo ja existe no arquivo 'indice_produtos.dat'
 	//se existir informar que ja existe um produto com esse codigo

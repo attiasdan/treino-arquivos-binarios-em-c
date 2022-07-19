@@ -39,10 +39,11 @@ void menu();
 void inserirProduto(); //funcionando parcialmente
 void excluirProduto();
 void editarProduto();
-void exibirIndiceProdutos();
+void exibirIndiceProdutos(); //100% funcionando
 void exibirProdutos(); //100% funcionando
 int consultaIndiceProduto(const char *filename, int chave); //100% funcionando
 int consultaProduto();
+int solicitarCodigo();
 
 //Protótipos das Funções de Cliente:
 void inserirCliente();
@@ -58,7 +59,7 @@ void editarVenda();
 
 void ordenar(); //ordenacao bolha
 
-int tamanhoArquivo(const char *filename);
+int tamanhoArquivo(const char *filename); //100% funcionando
 
 
 
