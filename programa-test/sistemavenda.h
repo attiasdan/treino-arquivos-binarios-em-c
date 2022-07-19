@@ -37,7 +37,7 @@ void menu();
 
 int tamanhoArquivo(const char *filename); //100% funcionando
 
-void ordenar(); //ordenacao bolha
+void ordenar(int *V  , int N); //ordenacao bolha
 
 FILE *abrirArquivoLeitura(const char *filename);
 FILE *abrirArquivoEscrita(const char *filename);

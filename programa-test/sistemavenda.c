@@ -151,6 +151,20 @@ void inserirVenda()
 
 }//cadastrarVenda
 
+void ordenar(int *V  , int N) {
+    int i, continua, aux;
+    do{
+        continua = 0;
+        for(i = 0; i < N-1; i++){
+            if (V[i] > V[i+1]){
+                aux = V[i];
+                V[i] = V[i+1];
+                V[i+1] = aux;
+                continua = 1;
+            }
+        }
+    }while(continua);
+}
 int tamanhoArquivo(const char *filename)
 {
 	struct stat sb;
