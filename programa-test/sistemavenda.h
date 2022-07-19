@@ -38,10 +38,10 @@ void menu();
 //Protótipos das Funções de Produto:
 void inserirProduto(); //funcionando parcialmente
 void excluirProduto();
-void consultarProduto();
 void editarProduto();
 void exibirIndiceProdutos();
 void exibirProdutos(); //100% funcionando
+int consultaProduto(const char *filename, int chave);
 
 //Protótipos das Funções de Cliente:
 void inserirCliente();
@@ -59,7 +59,6 @@ void ordenar(); //ordenacao bolha
 
 int tamanhoArquivo(const char *filename);
 
-int consultaProduto(const char *filename, int chave);
 
 
 #endif

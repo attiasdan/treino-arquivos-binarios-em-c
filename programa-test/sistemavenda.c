@@ -24,7 +24,7 @@ void menu()
 {
     int op;
 	int tam = -1;
-	int cod, posicao;
+	int codBusca, posicao;
 	
     do {
     	system("cls");
@@ -65,8 +65,8 @@ void menu()
             	break;
             case 16:
             	printf("Qual o codigo do produto que busca:\n> ");
-            	scanf("%d", &cod);
-            	posicao = consultaProduto(arqIndiceProdutos, cod);
+            	scanf("%d", &codBusca);
+            	posicao = consultaProduto(arqIndiceProdutos, codBusca);
             	
             	if (posicao != -1) {
             		printf("Produto cadastrado, encontra-se na posicao: %d", posicao);
@@ -142,7 +142,7 @@ int consultaProduto(const char *filename, int chave)
 	
 	inicio = 0;
 	
-	fseek(fp, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
+	//fseek(fp, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	
 	fim = (tamanhoArquivo(filename) / sizeof(Indice)) - 1;
 	
@@ -162,12 +162,10 @@ int consultaProduto(const char *filename, int chave)
 				fim = meio - 1;
 			}
 			else {
-				fclose(fp);
 				return aux->posicao; //achou
 			}
 		}
 	}
-	fclose(fp);
 	return -1;
 }
 
@@ -225,8 +223,7 @@ void inserirProduto() {
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
-//	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
-	auxIndice.posicao = 1; //mudar posteriormente
+	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
@@ -260,7 +257,7 @@ void exibirIndiceProdutos()
 	arquivo = fopen(arqIndiceProdutos, "rb");
 	
 	Indice auxIndice;
-	
+
 	system("cls");
 	
 	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
