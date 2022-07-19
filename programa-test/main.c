@@ -112,7 +112,7 @@ void exibirProdutos()
 { //exibicao sequencial
 	FILE *arquivo;
 	
-	arquivo = fopen("produtos.dat", "rb");
+	arquivo = fopen("produtos.dat", "ab");
 	
 	if (!arquivo) {
 		printf("Nao foi possivel abrir o arquivo para leitura");
@@ -130,12 +130,13 @@ void exibirProdutos()
 	
 	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
 	{
-		printf("CodProduto: %d", auxProduto.codigo);
-		printf("Nome do Produto: %s", auxProduto.nome);
-		printf("Quantidade do Produto: %d", auxProduto.quantidade);
-		printf("Valor do Produto: %f", auxProduto.valor);
+		printf("\nCodigo do Produto: %d\n", auxProduto.codigo);
+		printf("Nome do Produto: %s\n", auxProduto.nome);
+		printf("Quantidade do Produto: %d\n", auxProduto.quantidade);
+		printf("Valor do Produto: %f\n", auxProduto.valor);
 	}
 	fclose(arquivo);
+	system("pause");
 }
 void menu()
 {
@@ -259,12 +260,16 @@ void inserirProduto() {
 	Produto auxProduto;
 	
 	FILE *arquivo;
-	arquivo = fopen("produtos.dat", "ab");
-	if (!arquivo) {
+	FILE *arquivo_indice;
+	arquivo = fopen("produtos.dat", "a+b");
+	arquivo_indice = fopen("indice_produtos.dat", "a+b");
+	
+	if (!arquivo || !arquivo_indice) {
 		printf("Nao foi possivel abrir o arquivo ´produtos.dat´");
 		return ;
 	}
 	
+	system("cls");
 	printf("Voce escolheu a opcao de inserir dados para novo Produto\n\n");
 	
 	fflush(stdin); //limpar buffer do teclado
@@ -287,6 +292,9 @@ void inserirProduto() {
 	scanf("%f", &auxProduto.valor);
 	
 	fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
+	
+	fclose(arquivo);
+	fclose(arquivo_indice);
 }
 void atualizar() {
 //alteracao de registro
