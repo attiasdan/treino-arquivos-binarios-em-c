@@ -61,7 +61,7 @@ typedef struct {
 typedef struct {
 	int indice; //aponta (semelhante a chave estrangeira) 
 	int posicao;
-}; Indice
+}; Indice;
 
 Cliente clientes[MAX_CLIENTE];
 Produto produtos[MAX_PRODUTO];
@@ -219,13 +219,24 @@ void inserirVenda()
 
 }//cadastrarVenda
 
-int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
+int tamanhoArquivo(FILE *fp, const char *filename)
+{
+	struct stat sb;
+
+    if (stat(filename, &sb) == -1) {
+        perror("stat");
+        exit(EXIT_FAILURE);
+    }
+    
+	return sb.st_size;
+}
+int consulta(FILE *fp, int chave, Produto *p, const char *filename)
 {//busca binaria por codigo
 	int inicio, meio, fim;
 	
 	inicio = 0;
 	
-	fim = (tamanhoArquivo(fp) / sizeof(Produto)) - 1;
+	fim = (tamanhoArquivo(fp, filename) / sizeof(Produto)) - 1;
 	
 	while (inicio <= fim) {
 		meio = (inicio + fim) / 2;
@@ -265,6 +276,7 @@ void inserirProduto() {
 	Indice auxIndice; //variavel temporaria
 	FILE *arquivo;
 	FILE *arquivo_indice;
+	
 	arquivo = fopen(arqProdutos, "ab+");
 	arquivo_indice = fopen(arqIndiceProdutos, "ab+");
 	
@@ -283,16 +295,16 @@ void inserirProduto() {
 	//verificar se o codigo ja existe no arquivo 'indice_produtos.dat'
 	//se existir informar que ja existe um produto com esse codigo
 	
-	fflush(stdin);
 	printf("Nome do Novo Produto:\n> ");
+	fflush(stdin);
 	gets(auxProduto.nome);
 	
-	fflush(stdin);
 	printf("Quantidade do Novo Produto:\n> ");
+	fflush(stdin);
 	scanf("%d", &auxProduto.quantidade);
 	
-	fflush(stdin);
 	printf("Preco do Novo Produto:\n> ");
+	fflush(stdin);
 	scanf("%f", &auxProduto.valor);
 	
 	//gravando os dados no arquivo 'produtos.dat'
