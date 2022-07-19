@@ -1,18 +1,37 @@
-//#ifndef SISTEMAVENDA_H_INCLUDED
-//#define SISTEMAVENDA_H_INCLUDED
-//#endif
+#ifndef SISTEMAVENDA_H_INCLUDED
+#define SISTEMAVENDA_H_INCLUDED
 
 #define MAX_CLIENTE 100
 #define MAX_PRODUTO 100
 #define MAX_VENDA 100
 
-const char *arqProdutos = "produtos.dat";
-const char *arqClientes = "clientes.dat";
-const char *arqVendas = "vendas.dat";
+typedef struct {
+    int codigo; //identificador
+    char nome[100]; //ok
+    char telefone[13]; //ok
+    char endereco[100]; //ok
+} Cliente;
 
-const char *arqIndiceProdutos = "indice_produtos.dat";
-const char *arqIndiceClientes = "indice_clientes.dat";
-const char *arqIndiceVendas = "indice_vendas.dat";
+typedef struct {
+    int codigo; //identificador
+    char nome[50]; //ok
+    int quantidade; //ok
+    float valor; //ok
+} Produto;
+
+typedef struct {
+    int nroVenda; //identificador
+    char dataVendas[10]; //ok
+    int codCliente; //ok
+    int codProduto; //ok
+    int qtdProdutos; //ok
+	float valorTotal; //ok
+} Venda;
+
+typedef struct {
+	int indice; //aponta (semelhante a chave estrangeira) 
+	int posicao;
+} Indice;
 
 void menu();
 
@@ -41,3 +60,6 @@ void ordenar(); //ordenacao bolha
 int tamanhoArquivo(const char *filename);
 
 int consultaProduto(const char *filename, int chave);
+
+
+#endif
