@@ -43,14 +43,14 @@ FILE *abrirArquivoLeitura(const char *filename);
 FILE *abrirArquivoEscrita(const char *filename);
 
 //Protótipos das Funções de Produto:
-void inserirProduto(); //funcionando parcialmente
-void excluirProduto();
-void editarProduto(); //fazendo
+void inserirProduto(); //100% funcionando
 void exibirIndiceProdutos(); //100% funcionando
 void exibirProdutos(); //100% funcionando
 int consultaIndiceProduto(int chave); //100% funcionando
-int consultaProduto();
-int solicitarCodigo();
+int solicitarCodigo(); //100% funcionando
+//int consultaProduto();
+//void excluirProduto();
+void editarProduto(); //fazendo
 
 //Protótipos das Funções de Cliente:
 void inserirCliente();
