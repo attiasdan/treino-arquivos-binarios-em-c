@@ -1,17 +1,3 @@
-/*
-Arq 4 - indices_clientes:
-    campo 'índice' – inteiro
-    campo 'posição que o registro ocupa (inteiro)' – inteiro
-
-Arq 5 - indices_produtos:
-    campo 'índice' – inteiro
-    campo 'posição que o registro ocupa (inteiro)' – inteiro
-
-Arq 6 - indices_vendas:
-    campo 'índice' – inteiro
-    campo 'posição que o registro ocupa (inteiro)' – inteiro
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -61,7 +47,7 @@ typedef struct {
 typedef struct {
 	int indice; //aponta (semelhante a chave estrangeira) 
 	int posicao;
-}; Indice;
+} Indice;
 
 Cliente clientes[MAX_CLIENTE];
 Produto produtos[MAX_PRODUTO];
@@ -89,7 +75,9 @@ void editarVenda();
 
 void ordenar(); //ordenacao bolha
 
-int buscaBinariaPorId(FILE *fp, int chave, Produto *p); //busca binaria por codigo
+int tamanhoArquivo(FILE *fp, const char *filename);
+
+int consultaProduto(FILE *fp, int chave, Produto *p, const char *filename);
 
 int main()
 {
@@ -99,6 +87,25 @@ int main()
 	menu();
 
     return 0;
+}
+void exibirIndiceProdutos()
+{
+	FILE *arquivo;
+	arquivo = fopen(arqIndiceProdutos, "rb");
+	
+	Indice auxIndice;
+	
+	system("cls");
+	
+	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
+	
+	while (fread(&auxIndice, sizeof(Indice), 1, arquivo) > 0)
+	{
+		printf("Indice: %d\n", auxIndice.indice);
+		printf("Posicao: %d\n\n",auxIndice.posicao);
+	}
+	system("pause");
+	fclose(arquivo);
 }
 void exibirProdutos()
 { //exibicao sequencial
@@ -134,19 +141,21 @@ void menu()
         printf("1 - Cadastrar 1(um) produto\n");
         printf("2 - Excluir 1(um) produto\n");
         printf("3 - Consultar 1(um) produto\n");
-        printf("4 - Editar 1(um) produto\n\n");
+        printf("4 - Editar 1(um) produto\n");
         
 		printf("5 - Cadastrar 1(um) cliente\n");
         printf("6 - Excluir 1(um) cliente\n");
         printf("7 - Consultar 1(um) cliente\n");
-        printf("8 - Editar 1(um) cliente\n\n");
+        printf("8 - Editar 1(um) cliente\n");
         
 		printf("9 - Cadastrar 1(uma) venda\n");
         printf("10 - Excluir 1(uma) venda\n");
         printf("11 - Consultar 1(uma) venda\n");
-        printf("12 - Editar 1(uma) venda\n\n");
+        printf("12 - Editar 1(uma) venda\n");
     	
-    	printf("13 - Exibir todos os produtos cadastrados\n\n");
+    	printf("13 - Exibir todos os produtos cadastrados\n");
+    	printf("14 - Exibir indices dos produtos cadastrados\n");
+    	
     	
     	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ e quantidade de registros\n\n");
         printf("0 - FECHAR PROGRAMA\n\n");
@@ -164,7 +173,9 @@ void menu()
             case 13:
             	exibirProdutos();
             	break;
-            	
+            case 14:
+            	exibirIndiceProdutos();
+            	break;
             case 20:
             	
 //            	FILE *f;
@@ -230,7 +241,7 @@ int tamanhoArquivo(FILE *fp, const char *filename)
     
 	return sb.st_size;
 }
-int consulta(FILE *fp, int chave, Produto *p, const char *filename)
+int consultaProduto(FILE *fp, int chave, Produto *p, const char *filename)
 {//busca binaria por codigo
 	int inicio, meio, fim;
 	
@@ -272,8 +283,8 @@ void inserirProduto() {
 		//inserir no final do arquivo
 		//usar o mï¿½todo da bolha para ordenacao do arquivo de indice
 	
-	Produto auxProduto; //variavel temporaria
-	Indice auxIndice; //variavel temporaria
+	Produto auxProduto;
+	Indice auxIndice;
 	FILE *arquivo;
 	FILE *arquivo_indice;
 	
@@ -312,7 +323,7 @@ void inserirProduto() {
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
-	auxIndice.posicao = buscaBinariaPorId();
+	auxIndice.posicao = consultaProduto(arquivo_indice, auxIndice.indice, &auxProduto, arqIndiceProdutos);
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
