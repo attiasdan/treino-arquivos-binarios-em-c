@@ -92,6 +92,18 @@ void menu()
     } while(op != 0);
     
 }
+FILE *abrirArquivoLeitura(const char *filename) {
+	FILE *fp = fopen(filename, "rb");
+	if (!fp)
+		printf("Nao foi possivel abrir o arquivo");
+	return fp;
+}
+FILE *abrirArquivoEscrita(const char *filename) {
+	FILE *fp = fopen(filename, "ab+");
+	if (!fp)
+		printf("Nao foi possivel abrir o arquivo");
+	return fp;
+}
 void editarProduto()
 {
 	int cod = solicitarCodigo();
@@ -158,12 +170,7 @@ int solicitarCodigo() {
 int consultaIndiceProduto(int chave)
 {//busca binaria por indice
 
-	FILE *fp;
-	
-	fp = fopen(arqIndiceProdutos, "rb");
-	
-	if (!fp)
-		printf("Nao foi possivel abrir o arquivo");
+	FILE *fp = abrirArquivoLeitura(arqIndiceProdutos);
 		
 	//busca:
 	int inicio, meio, fim;
@@ -204,8 +211,8 @@ void inserirProduto() {
 	FILE *arquivo;
 	FILE *arquivo_indice;
 	
-	arquivo = fopen(arqProdutos, "ab+");
-	arquivo_indice = fopen(arqIndiceProdutos, "ab+");
+	arquivo = abrirArquivoEscrita(arqProdutos);
+	arquivo_indice = abrirArquivoEscrita(arqIndiceProdutos);
 	
 	system("cls");
 	

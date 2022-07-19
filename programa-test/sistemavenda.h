@@ -35,6 +35,13 @@ typedef struct {
 
 void menu();
 
+int tamanhoArquivo(const char *filename); //100% funcionando
+
+void ordenar(); //ordenacao bolha
+
+FILE *abrirArquivoLeitura(const char *filename);
+FILE *abrirArquivoEscrita(const char *filename);
+
 //Protótipos das Funções de Produto:
 void inserirProduto(); //funcionando parcialmente
 void excluirProduto();
@@ -56,11 +63,5 @@ void inserirVenda();
 void excluirVenda();
 void consultarVenda();
 void editarVenda();
-
-void ordenar(); //ordenacao bolha
-
-int tamanhoArquivo(const char *filename); //100% funcionando
-
-
 
 #endif
