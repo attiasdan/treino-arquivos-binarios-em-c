@@ -128,12 +128,10 @@ void exibirProdutos()
 //	}
 	Produto auxProduto;
 	
+	printf("Codigo\tNome do Produto\tQtd do Produto\tPreco do Produto\n");
 	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
 	{
-		printf("\nCodigo do Produto: %d\n", auxProduto.codigo);
-		printf("Nome do Produto: %s\n", auxProduto.nome);
-		printf("Quantidade do Produto: %d\n", auxProduto.quantidade);
-		printf("Valor do Produto: %f\n", auxProduto.valor);
+		printf("%d\t%s\t%d\t%f", auxProduto.codigo, auxProduto.nome, auxProduto.quantidade, auxProduto.valor);
 	}
 	fclose(arquivo);
 	system("pause");
