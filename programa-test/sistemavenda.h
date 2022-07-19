@@ -38,10 +38,10 @@ void menu();
 //Protótipos das Funções de Produto:
 void inserirProduto(); //funcionando parcialmente
 void excluirProduto();
-void editarProduto();
+void editarProduto(); //fazendo
 void exibirIndiceProdutos(); //100% funcionando
 void exibirProdutos(); //100% funcionando
-int consultaIndiceProduto(const char *filename, int chave); //100% funcionando
+int consultaIndiceProduto(int chave); //100% funcionando
 int consultaProduto();
 int solicitarCodigo();
 

@@ -56,7 +56,9 @@ void menu()
             case 1:
                 inserirProduto();
                 break;
-            case 2:
+            case 4:
+            	editarProduto();
+            	
                 break;
             case 13:
             	exibirProdutos();
@@ -68,7 +70,7 @@ void menu()
             	printf("Qual o codigo do produto que busca:\n> ");
             	scanf("%d", &codBusca);
             	
-            	posicao = consultaIndiceProduto(arqIndiceProdutos, codBusca);
+            	posicao = consultaIndiceProduto(codBusca);
             	
             	if (posicao != -1) {
             		printf("\nProduto cadastrado, encontra-se na posicao: %d\n\n", posicao);
@@ -90,7 +92,21 @@ void menu()
     } while(op != 0);
     
 }
-
+void editarProduto()
+{
+	int cod = solicitarCodigo();
+	int posicao = -1;
+	posicao = consultaIndiceProduto(cod);
+	
+	if (posicao == -1) {
+		printf("Codigo inexistente, impossivel editar.");
+		return ;
+	}
+	
+//	fseek(fp, posicao * sizeof(Indice), SEEK_SET);
+	
+//	fread(&aux, sizeof(Indice), 1, fp);
+}
 void inserirVenda()
 {
     system("cls");
@@ -139,12 +155,12 @@ int solicitarCodigo() {
 	scanf("%d", &cod);
 	return cod;
 }
-int consultaIndiceProduto(const char *filename, int chave)
+int consultaIndiceProduto(int chave)
 {//busca binaria por indice
 
 	FILE *fp;
 	
-	fp = fopen(filename, "rb");
+	fp = fopen(arqIndiceProdutos, "rb");
 	
 	if (!fp)
 		printf("Nao foi possivel abrir o arquivo");
@@ -154,7 +170,7 @@ int consultaIndiceProduto(const char *filename, int chave)
 	inicio = 0;
 	Indice aux;
 	
-	fim = (tamanhoArquivo(filename) / sizeof(Indice)) - 1;
+	fim = (tamanhoArquivo(arqIndiceProdutos) / sizeof(Indice)) - 1;
 	
 	while (inicio <= fim)
 	{
@@ -206,7 +222,7 @@ void inserirProduto() {
 		fflush(stdin); //limpar buffer do teclado
 		scanf("%d", &auxProduto.codigo);
 		
-		if (consultaIndiceProduto(arqIndiceProdutos, auxProduto.codigo) != -1) {
+		if (consultaIndiceProduto(auxProduto.codigo) != -1) {
 			printf("Codigo indisponivel, tente outro...\n");
 			volta = 1;
 		} else {
