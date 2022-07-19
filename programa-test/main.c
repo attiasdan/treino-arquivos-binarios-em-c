@@ -112,7 +112,7 @@ void exibirProdutos()
 { //exibicao sequencial
 	FILE *arquivo;
 	
-	arquivo = fopen("produtos.dat", "ab");
+	arquivo = fopen("produtos.dat", "rb");
 	
 	if (!arquivo) {
 		printf("Nao foi possivel abrir o arquivo para leitura");
@@ -121,11 +121,13 @@ void exibirProdutos()
 	Produto auxProduto;
 	
 	system("cls");
-	printf("Codigo\t|\tNome do Produto\t|\tQtd do Produto\t|\tPreco do Produto\n");
 	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
 	{
-		printf("%d\t%s\t%d\t%f", auxProduto.codigo, auxProduto.nome, auxProduto.quantidade, auxProduto.valor);
+		printf("Codigo de Produto: %d\n", auxProduto.codigo);
+		printf("Nome do Produto: %s\n",auxProduto.nome);
+		printf("Quantidade do Produto: %d\n",auxProduto.quantidade);
+		printf("Preco do Produto: %.2f\n\n",auxProduto.valor);
 	}
 	fclose(arquivo);
 	system("pause");
@@ -173,20 +175,20 @@ void menu()
             	
             case 20:
             	
-            	FILE *f;
-            	
-            	Produto auxProduto;
-            	
-            	f = fopen("produtos.dat", "rb");
-            	
-				fseek(f, 0L, SEEK_END);//posiciona o ponteiro para final do arquivo
-				
-				size_t fSize = ftell(f);
-				
-				printf("Tamanho do arquivo [produtos.dat]: %d (Bytes)", fSize);
-				printf("Nr. registros: %d\n\n", (fSize/sizeof(Produto)));
-				
-				fclose(f);
+//            	FILE *f;
+//            	
+//            	Produto auxProduto;
+//            	
+//            	f = fopen("produtos.dat", "rb");
+//            	
+//				fseek(f, 0L, SEEK_END);//posiciona o ponteiro para final do arquivo
+//				
+//				size_t fSize = ftell(f);
+//				
+//				printf("Tamanho do arquivo [produtos.dat]: %d (Bytes)", fSize);
+//				printf("Nr. registros: %d\n\n", (fSize/sizeof(Produto)));
+//				
+//				fclose(f);
 				
 				break;
         }
@@ -274,8 +276,8 @@ void inserirProduto() {
 	
 	FILE *arquivo;
 	FILE *arquivo_indice;
-	arquivo = fopen("produtos.dat", "a+b");
-	arquivo_indice = fopen("indice_produtos.dat", "a+b");
+	arquivo = fopen("produtos.dat", "ab+");
+	arquivo_indice = fopen("indice_produtos.dat", "ab+");
 	
 	if (!arquivo || !arquivo_indice) {
 		printf("Nao foi possivel abrir o arquivo ´produtos.dat´");
