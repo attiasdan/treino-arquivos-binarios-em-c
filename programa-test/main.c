@@ -75,7 +75,7 @@ void ordenar(); //ordenacao bolha
 
 int tamanhoArquivo(FILE *fp, const char *filename);
 
-int consultaProduto(FILE *fp, int chave, Produto *p, const char *filename);
+int consultaProduto(const char *filename, int chave);
 
 int main()
 {
@@ -143,12 +143,12 @@ void exibirClientes()
 	
 	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	
-	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
+	while (fread(&auxCliente, sizeof(Cliente), 1, arquivo) > 0)
 	{
-		printf("Codigo de Produto: %d\n", auxProduto.codigo);
-		printf("Nome do Produto: %s\n",auxProduto.nome);
-		printf("Quantidade do Produto: %d\n",auxProduto.quantidade);
-		printf("Preco do Produto: %.2f\n\n",auxProduto.valor);
+		printf("Codigo do Cliente: %d\n", auxCliente.codigo);
+		printf("Nome do Cliente: %s\n",auxCliente.nome);
+		printf("Endereco do Cliente: %s\n",auxCliente.endereco);
+		printf("Telefone do Cliente: %s\n\n",auxCliente.telefone);
 	}
 	fclose(arquivo);
 	system("pause");
@@ -159,6 +159,8 @@ void menu()
     
 	FILE *arqTeste;
 	int tam = -1;
+	
+	int cod, posicao;
 	
     do {
     	system("cls");
@@ -181,6 +183,7 @@ void menu()
     	printf("13 - Exibir todos os produtos cadastrados\n");
     	printf("14 - Exibir indices dos produtos cadastrados\n");
     	printf("15 - Exibir tamanho do arquivo 'produtos.dat' em Bytes\n");
+    	printf("16 - Consultar produto pelo codigo no arquivo 'indice_produtos.dat'\n");
     	
     	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ e quantidade de registros\n");
         printf("0 - FECHAR PROGRAMA\n\n");
@@ -207,6 +210,19 @@ void menu()
             	tam = tamanhoArquivo(arqTeste, arqProdutos);
             	if (tam != -1) {
             		printf("Tamanho em bytes: %d", tam);
+				}
+				system("pause");
+            	break;
+            case 16:
+            	printf("Qual o codigo do produto que busca:\n> ");
+            	scanf("%d", &cod);
+            	posicao = consultaProduto(arqIndiceProdutos, cod);
+            	
+            	if (posicao != -1) {
+            		printf("Produto cadastrado, encontra-se na posicao: %d", posicao);
+				}
+				else {
+					printf("Produto nao cadastrado, codigo nao encontrado");
 				}
 				system("pause");
             	break;
@@ -275,9 +291,9 @@ int tamanhoArquivo(FILE *fp, const char *filename)
     
 	return sb.st_size;
 }
-int consultaProduto(FILE *fp, int chave)
+int consultaProduto(const char *filename, int chave)
 {//busca binaria por indice
-
+	FILE *fp = fopen(filename, "rb");
 	int inicio, meio, fim;
 	
 	Indice *aux;
@@ -301,11 +317,13 @@ int consultaProduto(FILE *fp, int chave)
 				fim = meio - 1;
 			}
 			else {
+				fclose(fp);
 				return aux->posicao; //achou
 			}
 		}
 	}
-	return 0;
+	fclose(fp);
+	return -1;
 }
 
 void inserirProduto() {
@@ -360,7 +378,7 @@ void inserirProduto() {
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
-	auxIndice.posicao = consultaProduto(arquivo_indice, auxIndice.indice);
+	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
