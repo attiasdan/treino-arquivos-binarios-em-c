@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <sys/stat.h>
+#include <math.h>
 #include "sistemavenda.h"
 
 const char *arqProdutos = "produtos.dat";
@@ -72,8 +73,7 @@ void menu()
             	posicao = consultaIndiceProduto(arqIndiceProdutos, codBusca);
             	
             	if (posicao != -1) {
-//            		printf("\nProduto cadastrado, encontra-se na posicao: %d\n", posicao);
-					printf("Existe produto com esse codigo");
+            		printf("\nProduto cadastrado, encontra-se na posicao: %d\n\n", posicao);
 				}
 				else {
 					printf("Produto nao cadastrado, codigo nao encontrado");
@@ -138,35 +138,65 @@ int tamanhoArquivo(const char *filename)
 int consultaIndiceProduto(const char *filename, int chave)
 {//busca binaria por indice
 
-	FILE *fp = fopen(filename, "rb");
+	FILE *fp;
+	
+	fp = fopen(filename, "rb");
+	
+	if (!fp)
+		printf("Nao foi possivel abrir o arquivo");
 	
 	int inicio, meio, fim;
 	
-	Indice *aux;
+	Indice aux;
 	
 	inicio = 0;
 	
-	//fseek(fp, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
+//	fseek(fp, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	
 	fim = (tamanhoArquivo(filename) / sizeof(Indice)) - 1;
+	
+	printf("\nAntes do loop\ninicio = %d\n", inicio);
+	printf("meio = %d\n", meio);
+	printf("fim = %d\n", fim);
+	printf("--------------------------\n");
 	
 	while (inicio <= fim)
 	{
 		meio = (inicio + fim) / 2;
 		
+		printf("inicio = %d\n", inicio);
+		printf("meio = %d\n", meio);
+		printf("fim = %d\n", fim);
+		printf("--------------------------\n");
+		
 		fseek(fp, meio * sizeof(Indice), SEEK_SET);
 		
-		fread(aux, sizeof(Indice), 1, fp);
+		fread(&aux, sizeof(Indice), 1, fp);
 		
-		if (chave > aux->indice)
+		if (chave > aux.indice) {
 			inicio = meio + 1;
+			printf("inicio = %d\n", inicio);
+			printf("meio = %d\n", meio);
+			printf("fim = %d\n", fim);
+			printf("--------------------------\n");
+		}
 		else {
-			if (chave < aux->indice)
+			if (chave < aux.indice) {
 				fim = meio - 1;
-			else
-				return aux->posicao;
+				printf("inicio = %d\n", inicio);
+				printf("meio = %d\n", meio);
+				printf("fim = %d\n", fim);
+				printf("--------------------------\n");
+			}
+			else {
+				return aux.posicao;
+			}
 		}
 	}
+	printf("Ultimo caso - nao encontrado\ninicio = %d\n", inicio);
+	printf("meio = %d\n", meio);
+	printf("fim = %d\n", fim);
+	printf("--------------------------\n");
 	return -1;
 }
 
@@ -200,8 +230,8 @@ void inserirProduto() {
 	
 	printf("Voce escolheu a opcao de inserir dados para novo Produto\n\n");
 	
-	fflush(stdin); //limpar buffer do teclado
 	printf("Codigo do Novo Produto:\n> ");
+	fflush(stdin); //limpar buffer do teclado
 	scanf("%d", &auxProduto.codigo);
 	
 	//verificar se o codigo ja existe no arquivo 'indice_produtos.dat'
@@ -224,18 +254,16 @@ void inserirProduto() {
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
-//	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
-//	auxIndice.posicao = consultaIndiceProduto(arqIndiceProdutos, auxIndice.indice);
-
 	qtdProdutosCadastrados = tamanhoArquivo(arqProdutos) / sizeof(Produto);
 	
 	if (qtdProdutosCadastrados == 0) {
 		auxIndice.posicao = 0;
 	} else {
-		auxIndice.posicao = qtdProdutosCadastrados * sizeof(Produto);
+		auxIndice.posicao = (qtdProdutosCadastrados * sizeof(Produto)) + sizeof(Produto);
 	}
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
+	//liberando os ponteiros do arquivos
 	fclose(arquivo);
 	fclose(arquivo_indice);
 }

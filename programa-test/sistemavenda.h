@@ -41,7 +41,7 @@ void excluirProduto();
 void editarProduto();
 void exibirIndiceProdutos();
 void exibirProdutos(); //100% funcionando
-int consultaIndiceProduto(const char *filename, int chave); //parcialmente funcionando
+int consultaIndiceProduto(const char *filename, int chave); //100% funcionando
 int consultaProduto();
 
 //Protótipos das Funções de Cliente:
