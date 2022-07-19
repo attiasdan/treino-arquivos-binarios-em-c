@@ -36,10 +36,8 @@ typedef struct {
 typedef struct {
     int nroVenda; //identificador
     char dataVendas[10]; //ok
-    
     int codCliente; //ok
     int codProduto; //ok
-    
     int qtdProdutos; //ok
 	float valorTotal; //ok
 } Venda;
@@ -55,19 +53,19 @@ Venda vendas[MAX_VENDA];
 
 void menu();
 
-//Protótipos da Funções de Produto:
+//Protótipos das Funções de Produto:
 void inserirProduto();
 void excluirProduto();
 void consultarProduto();
 void editarProduto();
 
-//Protótipos da Funções de Cliente:
+//Protótipos das Funções de Cliente:
 void inserirCliente();
 void excluirCliente();
 void consultarCliente();
 void editarCliente();
 
-//Protótipos da Funções de Venda:
+//Protótipos das Funções de Venda:
 void inserirVenda();
 void excluirVenda();
 void consultarVenda();
@@ -109,9 +107,7 @@ void exibirIndiceProdutos()
 }
 void exibirProdutos()
 { //exibicao sequencial
-	FILE *arquivo;
-	
-	arquivo = fopen(arqProdutos, "rb");
+	FILE *arquivo = fopen(arqProdutos, "rb");
 	
 	if (!arquivo) {
 		printf("Nao foi possivel abrir o arquivo para leitura");
@@ -120,7 +116,33 @@ void exibirProdutos()
 	Produto auxProduto;
 	
 	system("cls");
+	
 	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
+	
+	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
+	{
+		printf("Codigo de Produto: %d\n", auxProduto.codigo);
+		printf("Nome do Produto: %s\n",auxProduto.nome);
+		printf("Quantidade do Produto: %d\n",auxProduto.quantidade);
+		printf("Preco do Produto: %.2f\n\n",auxProduto.valor);
+	}
+	fclose(arquivo);
+	system("pause");
+}
+void exibirClientes()
+{ //exibicao sequencial
+	FILE *arquivo = fopen(arqClientes, "rb");
+	
+	if (!arquivo) {
+		printf("Nao foi possivel abrir o arquivo para leitura");
+	}
+	
+	Cliente auxCliente;
+	
+	system("cls");
+	
+	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
+	
 	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
 	{
 		printf("Codigo de Produto: %d\n", auxProduto.codigo);
@@ -253,30 +275,33 @@ int tamanhoArquivo(FILE *fp, const char *filename)
     
 	return sb.st_size;
 }
-int consultaProduto(FILE *fp, int chave, Produto *p, const char *filename)
-{//busca binaria por codigo
+int consultaProduto(FILE *fp, int chave)
+{//busca binaria por indice
+
 	int inicio, meio, fim;
 	
+	Indice *aux;
+	
 	inicio = 0;
+	fim = (tamanhoArquivo(fp, arqIndiceProdutos) / sizeof(Indice)) - 1;
 	
-	fim = (tamanhoArquivo(fp, filename) / sizeof(Produto)) - 1;
-	
-	while (inicio <= fim) {
+	while (inicio <= fim)
+	{
 		meio = (inicio + fim) / 2;
 		
-		fseek(fp, meio * sizeof(Produto), SEEK_SET);
+		fseek(fp, meio * sizeof(Indice), SEEK_SET);
 		
-		fread(p, sizeof(Produto), 1, fp);
+		fread(aux, sizeof(Indice), 1, fp);
 		
-		if (chave > p->codigo) {
+		if (chave > aux->indice) {
 			inicio = meio + 1;
 		}
 		else {
-			if (chave < p->codigo) {
+			if (chave < aux->indice) {
 				fim = meio - 1;
 			}
 			else {
-				return 1; //achou
+				return aux->posicao; //achou
 			}
 		}
 	}
@@ -335,7 +360,7 @@ void inserirProduto() {
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
-	auxIndice.posicao = consultaProduto(arquivo_indice, auxIndice.indice, &auxProduto, arqIndiceProdutos);
+	auxIndice.posicao = consultaProduto(arquivo_indice, auxIndice.indice);
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
