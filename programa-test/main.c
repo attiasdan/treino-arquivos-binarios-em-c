@@ -14,14 +14,24 @@ Arq 6 - indices_vendas:
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
 #include <time.h>
+#include <sys/stat.h>
 
 #define MAX_CLIENTE 100
 #define MAX_PRODUTO 100
 #define MAX_VENDA 100
+
+const char *arqProdutos = "produtos.dat";
+const char *arqClientes = "clientes.dat";
+const char *arqVendas = "vendas.dat";
+
+const char *arqIndiceProdutos = "indice_produtos.dat";
+const char *arqIndiceClientes = "indice_clientes.dat";
+const char *arqIndiceVendas = "indice_vendas.dat";
 
 typedef struct {
     int codigo; //identificador
@@ -94,7 +104,7 @@ void exibirProdutos()
 { //exibicao sequencial
 	FILE *arquivo;
 	
-	arquivo = fopen("produtos.dat", "rb");
+	arquivo = fopen(arqProdutos, "rb");
 	
 	if (!arquivo) {
 		printf("Nao foi possivel abrir o arquivo para leitura");
@@ -215,7 +225,7 @@ int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
 	
 	inicio = 0;
 	
-//	fim = (tamanhoArquivo(fp) / sizeof(Produto)) - 1;
+	fim = (tamanhoArquivo(fp) / sizeof(Produto)) - 1;
 	
 	while (inicio <= fim) {
 		meio = (inicio + fim) / 2;
@@ -242,8 +252,8 @@ int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
 void inserirProduto() {
 //fazer pesquisa binaria no proprio arquivo de indice:
 	//obter o registro do meio
-	//pesquisar chave ate encontrar cï¿½digo ou finalizar a pesquisa
-//caso ja exista o codigo, informar o cï¿½digo que jï¿½ foi cadastrado.
+	//pesquisar chave ate encontrar codigo ou finalizar a pesquisa
+//caso ja exista o codigo, informar o codigo que ja foi cadastrado.
 //nao existindo o codigo:
 	//solicitar ao usuï¿½rio as demais informaï¿½ï¿½es
 	//inserir no final do arquivo de dados respectivo
@@ -255,8 +265,8 @@ void inserirProduto() {
 	Indice auxIndice; //variavel temporaria
 	FILE *arquivo;
 	FILE *arquivo_indice;
-	arquivo = fopen("produtos.dat", "ab+");
-	arquivo_indice = fopen("indice_produtos.dat", "ab+");
+	arquivo = fopen(arqProdutos, "ab+");
+	arquivo_indice = fopen(arqIndiceProdutos, "ab+");
 	
 	if (!arquivo || !arquivo_indice) {
 		printf("Nao foi possivel abrir o arquivo ´produtos.dat´ ou ´indice_produtos.dat´ para escrita");
@@ -289,7 +299,9 @@ void inserirProduto() {
 	fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
-	fwrite()
+	auxIndice.indice = auxProduto.codigo;
+	auxIndice.posicao = buscaBinariaPorId();
+	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
 	fclose(arquivo_indice);
