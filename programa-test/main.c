@@ -77,23 +77,23 @@ int abrirArquivoLeitura(char arquivo[20]) {
 	}
 	fclose(fp);
 }
-int abrirArquivoEscrita(char arquivo[20]) {
+int abrirArquivoEscrita() {
 	FILE *fp;
 	
-	fp = fopen(arquivo, "ab");
+	fp = fopen("credit.dat", "ab");
 	
 	if (!fp) {
 		printf("Nao foi possivel abrir o arquivo para escrita");
 	}
 	fclose(fp);
 }
-void printarTodoArquivo(char arquivo[20])
+void printarTodoArquivo()
 {
-	FILE *fp;
+	FILE *arquivo;
 	
-	fp = fopen(arquivo, "rb");
+	arquivo = fopen("credit.dat", "rb");
 	
-	if (!fp) {
+	if (!arquivo) {
 		printf("Nao foi possivel abrir o arquivo para leitura");
 	}
 	
@@ -105,7 +105,7 @@ void printarTodoArquivo(char arquivo[20])
 		printf("%s", auxCliente.telefone);
 		printf("%s", auxCliente.endereco);
 	}
-	fclose(fp);
+	fclose(arquivo);
 }
 void menu()
 {
@@ -195,8 +195,27 @@ void inserir() {
 				//usar o m�todo da bolha para ordena��o do arquivo de �ndice
 	
 	int codigo = 0;
-	printf("Entre com o c�digo do registro:\n> ");
+	int continuar;
+	Produto auxProduto;
+	
+	FILE *arquivo;
+	arquivo = fopen("credit.dat", "ab");
+	
+	
+	
+	printf("Entre com o codigo do registro:\n> ");
 	scanf("%d", &codigo);
+	
+	do {
+		fflush(stdin); //limpar buffer do teclado
+		
+		system("cls");
+		
+		printf("Nome: ");
+		gets(auxProduto.nome);
+		
+		fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
+	} while(continuar);
 }
 void atualizar() {
 //altera��o de registro
