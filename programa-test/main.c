@@ -78,7 +78,7 @@ int buscaBinariaPorId(FILE *fp, int chave, Produto *p); //busca binaria por codi
 
 int main()
 {
-	system("color f0"); //mudança nas cores do terminal
+	system("color 0e"); //mudança nas cores do terminal
 	system("title Trabalho de Arquivos Binarios - Disciplina Programacao 1"); //definicao do titulo da janela
     
 	menu();
@@ -128,7 +128,8 @@ void exibirProdutos()
 //	}
 	Produto auxProduto;
 	
-	printf("Codigo\tNome do Produto\tQtd do Produto\tPreco do Produto\n");
+	system("cls");
+	printf("Codigo\t|\tNome do Produto\t|\tQtd do Produto\t|\tPreco do Produto\n");
 	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
 	{
 		printf("%d\t%s\t%d\t%f", auxProduto.codigo, auxProduto.nome, auxProduto.quantidade, auxProduto.valor);
