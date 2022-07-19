@@ -226,12 +226,12 @@ void inserirProduto() {
 	auxIndice.indice = auxProduto.codigo;
 //	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
 //	auxIndice.posicao = consultaIndiceProduto(arqIndiceProdutos, auxIndice.indice);
+
+	qtdProdutosCadastrados = tamanhoArquivo(arqProdutos) / sizeof(Produto);
 	
 	if (qtdProdutosCadastrados == 0) {
 		auxIndice.posicao = 0;
-		qtdProdutosCadastrados++;
 	} else {
-		qtdProdutosCadastrados++;
 		auxIndice.posicao = qtdProdutosCadastrados * sizeof(Produto);
 	}
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
