@@ -85,29 +85,6 @@ int main()
 
     return 0;
 }
-int abrirArquivoLeitura() {
-	FILE *fp;
-	
-	fp = fopen("credit.dat", "rb");
-	
-	if (!fp) {
-		printf("Não foi possível abrir o arquivo para leitura");
-		return;
-	}
-	fclose(fp);
-}
-int abrirArquivoEscrita() {
-	FILE *fp;
-	
-	fp = fopen("credit.dat", "ab");
-	
-	if (!fp) {
-		printf("Nao foi possivel abrir o arquivo para escrita");
-	}
-	fclose(fp);
-	
-	return 0;
-}
 void exibirProdutos()
 { //exibicao sequencial
 	FILE *arquivo;
