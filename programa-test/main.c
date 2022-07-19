@@ -158,7 +158,7 @@ void menu()
         printf("11 - Consultar 1(uma) venda\n");
         printf("12 - Editar 1(uma) venda\n\n");
     	
-    	printf("13 - Exibir todos os produtos cadastrados");
+    	printf("13 - Exibir todos os produtos cadastrados\n\n");
         printf("0 - FECHAR PROGRAMA\n\n");
         
         printf("OPCAO?\n> ");
@@ -220,7 +220,7 @@ int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
 	
 	inicio = 0;
 	
-	fim = (tamanhoArquivo(fp) / sizeof(Produto)) - 1;
+//	fim = (tamanhoArquivo(fp) / sizeof(Produto)) - 1;
 	
 	while (inicio <= fim) {
 		meio = (inicio + fim) / 2;
@@ -245,16 +245,16 @@ int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
 }
 
 void inserirProduto() {
-		//fazer pesquisa binaria no proprio arquivo de indice:
-			//obter o registro do meio
-			//pesquisar chave ate encontrar c�digo ou finalizar a pesquisa
-		//caso ja exista o codigo, informar o c�digo que j� foi cadastrado.
-		//nao existindo o codigo:
-			//solicitar ao usu�rio as demais informa��es
-			//inserir no final do arquivo de dados respectivo
-			//inserir no arquivo de �ndice informando o c�digo e a posi��o no arquivo de dados
-				//inserir no final do arquivo
-				//usar o m�todo da bolha para ordenacao do arquivo de indice
+//fazer pesquisa binaria no proprio arquivo de indice:
+	//obter o registro do meio
+	//pesquisar chave ate encontrar c�digo ou finalizar a pesquisa
+//caso ja exista o codigo, informar o c�digo que j� foi cadastrado.
+//nao existindo o codigo:
+	//solicitar ao usu�rio as demais informa��es
+	//inserir no final do arquivo de dados respectivo
+	//inserir no arquivo de �ndice informando o c�digo e a posi��o no arquivo de dados
+		//inserir no final do arquivo
+		//usar o m�todo da bolha para ordenacao do arquivo de indice
 	Produto auxProduto;
 	
 	FILE *arquivo;
@@ -264,7 +264,7 @@ void inserirProduto() {
 		return ;
 	}
 	
-	printf("Voce escolheu a opcao de inserir dados para novo Produto");
+	printf("Voce escolheu a opcao de inserir dados para novo Produto\n\n");
 	
 	fflush(stdin); //limpar buffer do teclado
 	printf("Codigo do Novo Produto:\n> ");
