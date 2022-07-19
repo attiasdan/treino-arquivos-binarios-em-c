@@ -38,7 +38,7 @@ typedef struct {
 } Produto;
 
 typedef struct {
-    int nroVenda; //ï¿½ndice
+    int nroVenda; //indice
     char dataVendas[10]; //ok
     
     int codCliente; //ok
@@ -53,9 +53,27 @@ Produto produtos[MAX_PRODUTO];
 Venda vendas[MAX_VENDA];
 
 void menu();
-void cadastrarVenda();
-//void ordenar(); //ordenaï¿½ï¿½o bolha
-//void consultar(); //busca binï¿½ria
+
+//Protótipos da Funções de Produto:
+void inserirProduto();
+void excluirProduto();
+void consultarProduto();
+void editarProduto();
+
+//Protótipos da Funções de Cliente:
+void inserirCliente();
+void excluirCliente();
+void consultarCliente();
+void editarCliente();
+
+//Protótipos da Funções de Venda:
+void inserirVenda();
+void excluirVenda();
+void consultarVenda();
+void editarVenda();
+
+void ordenar(); //ordenacao bolha
+void consultar(); //busca binaria
 
 int main()
 {
@@ -66,10 +84,10 @@ int main()
 
     return 0;
 }
-int abrirArquivoLeitura(char arquivo[20]) {
+int abrirArquivoLeitura() {
 	FILE *fp;
 	
-	fp = fopen(arquivo, "rb");
+	fp = fopen("credit.dat", "rb");
 	
 	if (!fp) {
 		printf("Não foi possível abrir o arquivo para leitura");
@@ -86,6 +104,8 @@ int abrirArquivoEscrita() {
 		printf("Nao foi possivel abrir o arquivo para escrita");
 	}
 	fclose(fp);
+	
+	return 0;
 }
 void printarTodoArquivo()
 {
@@ -99,7 +119,7 @@ void printarTodoArquivo()
 	
 	Cliente auxCliente;
 	
-	while ( fread(&auxCliente, sizeof(Cliente), 1, arquivo) ) {
+	while ( fread(&auxCliente, sizeof(Cliente), 1, arquivo) > 0 ) {
 		printf("%d", auxCliente.id);
 		printf("%s", auxCliente.nome);
 		printf("%s", auxCliente.telefone);
@@ -109,10 +129,10 @@ void printarTodoArquivo()
 }
 void menu()
 {
-    system("cls");
     int op;
     
     do {
+    	system("cls");
     	printf("Bem vindo(a)!\n\nSelecione uma opcao do menu, digitando o numero e, logo em seguida, pressione a tecla ENTER\n\n");
         printf("1 - Cadastrar 1(um) produto\n");
         printf("2 - Excluir 1(um) produto\n");
@@ -136,14 +156,16 @@ void menu()
         
         switch (op)
         {
-            case '1':
-//                cadastrarVenda();
+            case 1:
+//                inserirProduto();
+				printf("Opcao 1");
                 break;
-            case '2':
+            case 2:
                 break;
         }
     } while(op!=0);
 }
+
 void cadastrarVenda()
 {
     system("cls");
@@ -230,8 +252,8 @@ void atualizar() {
 void excluir() {
 /*
 Excluir registro:
-- Pedir primeiro o cï¿½digo;
-- Verificar se o mesmo jï¿½ existe no respectivo arquivo de ï¿½ndice;
+- Pedir primeiro o codigo;
+- Verificar se o mesmo ja existe no respectivo arquivo de ï¿½ndice;
 - Caso nï¿½o exista, informar ao usuï¿½rio;
 - Existindo o cï¿½digo:
 - pedir confirmaï¿½ï¿½o de exclusï¿½o
