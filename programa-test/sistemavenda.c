@@ -20,6 +20,8 @@ Cliente clientes[MAX_CLIENTE];
 Produto produtos[MAX_PRODUTO];
 Venda vendas[MAX_VENDA];
 
+int qtdProdutosCadastrados = 0;
+
 void menu()
 {
     int op;
@@ -67,10 +69,11 @@ void menu()
             	printf("Qual o codigo do produto que busca:\n> ");
             	scanf("%d", &codBusca);
             	
-            	posicao = consultaProduto(arqIndiceProdutos, codBusca);
+            	posicao = consultaIndiceProduto(arqIndiceProdutos, codBusca);
             	
             	if (posicao != -1) {
-            		printf("\nProduto cadastrado, encontra-se na posicao: %d\n", posicao);
+//            		printf("\nProduto cadastrado, encontra-se na posicao: %d\n", posicao);
+					printf("Existe produto com esse codigo");
 				}
 				else {
 					printf("Produto nao cadastrado, codigo nao encontrado");
@@ -222,7 +225,15 @@ void inserirProduto() {
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
 //	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
-	auxIndice.posicao = consultaIndiceProduto(arqIndiceProdutos, auxIndice.indice);
+//	auxIndice.posicao = consultaIndiceProduto(arqIndiceProdutos, auxIndice.indice);
+	
+	if (qtdProdutosCadastrados == 0) {
+		auxIndice.posicao = 0;
+		qtdProdutosCadastrados++;
+	} else {
+		qtdProdutosCadastrados++;
+		auxIndice.posicao = qtdProdutosCadastrados * sizeof(Produto);
+	}
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
