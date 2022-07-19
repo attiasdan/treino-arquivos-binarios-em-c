@@ -48,6 +48,11 @@ typedef struct {
 	float valorTotal; //ok
 } Venda;
 
+typedef struct {
+	int indice; //aponta (semelhante a chave estrangeira) 
+	int posicao;
+}; Indice
+
 Cliente clientes[MAX_CLIENTE];
 Produto produtos[MAX_PRODUTO];
 Venda vendas[MAX_VENDA];
@@ -204,10 +209,6 @@ void inserirVenda()
 
 }//cadastrarVenda
 
-void consultar(int codigo) { //busca por codigo
-	
-}
-
 int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
 {//busca binaria por codigo
 	int inicio, meio, fim;
@@ -249,15 +250,16 @@ void inserirProduto() {
 	//inserir no arquivo de ï¿½ndice informando o cï¿½digo e a posiï¿½ï¿½o no arquivo de dados
 		//inserir no final do arquivo
 		//usar o mï¿½todo da bolha para ordenacao do arquivo de indice
-	Produto auxProduto;
 	
+	Produto auxProduto; //variavel temporaria
+	Indice auxIndice; //variavel temporaria
 	FILE *arquivo;
 	FILE *arquivo_indice;
 	arquivo = fopen("produtos.dat", "ab+");
 	arquivo_indice = fopen("indice_produtos.dat", "ab+");
 	
 	if (!arquivo || !arquivo_indice) {
-		printf("Nao foi possivel abrir o arquivo ´produtos.dat´");
+		printf("Nao foi possivel abrir o arquivo ´produtos.dat´ ou ´indice_produtos.dat´ para escrita");
 		return ;
 	}
 	
@@ -283,7 +285,11 @@ void inserirProduto() {
 	printf("Preco do Novo Produto:\n> ");
 	scanf("%f", &auxProduto.valor);
 	
+	//gravando os dados no arquivo 'produtos.dat'
 	fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
+
+	//gravando os dados no arquivo 'indice_produtos.dat'
+	fwrite()
 	
 	fclose(arquivo);
 	fclose(arquivo_indice);
