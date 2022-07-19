@@ -36,12 +36,12 @@ typedef struct {
 void menu();
 
 //Protótipos das Funções de Produto:
-void inserirProduto();
+void inserirProduto(); //funcionando parcialmente
 void excluirProduto();
 void consultarProduto();
 void editarProduto();
 void exibirIndiceProdutos();
-void exibirProdutos();
+void exibirProdutos(); //100% funcionando
 
 //Protótipos das Funções de Cliente:
 void inserirCliente();

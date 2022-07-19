@@ -23,9 +23,7 @@ Venda vendas[MAX_VENDA];
 void menu()
 {
     int op;
-    
 	int tam = -1;
-	
 	int cod, posicao;
 	
     do {
