@@ -73,7 +73,7 @@ void editarVenda();
 
 void ordenar(); //ordenacao bolha
 
-int tamanhoArquivo(FILE *fp, const char *filename);
+int tamanhoArquivo(const char *filename);
 
 int consultaProduto(const char *filename, int chave);
 
@@ -166,28 +166,23 @@ void menu()
     	system("cls");
     	printf("Bem vindo(a)!\n\nSelecione uma opcao do menu, digitando o numero e, logo em seguida, pressione a tecla ENTER\n\n");
         printf("1 - Cadastrar 1(um) produto\n");
-        printf("2 - Excluir 1(um) produto\n");
-        printf("3 - Consultar 1(um) produto\n");
-        printf("4 - Editar 1(um) produto\n");
-        
-		printf("5 - Cadastrar 1(um) cliente\n");
-        printf("6 - Excluir 1(um) cliente\n");
-        printf("7 - Consultar 1(um) cliente\n");
-        printf("8 - Editar 1(um) cliente\n");
-        
-		printf("9 - Cadastrar 1(uma) venda\n");
-        printf("10 - Excluir 1(uma) venda\n");
-        printf("11 - Consultar 1(uma) venda\n");
-        printf("12 - Editar 1(uma) venda\n");
-    	
-    	printf("13 - Exibir todos os produtos cadastrados\n");
-    	printf("14 - Exibir indices dos produtos cadastrados\n");
-    	printf("15 - Exibir tamanho do arquivo 'produtos.dat' em Bytes\n");
-    	printf("16 - Consultar produto pelo codigo no arquivo 'indice_produtos.dat'\n");
-    	
-    	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ e quantidade de registros\n");
+//        printf("2 - Excluir 1(um) produto\n");
+//        printf("3 - Consultar 1(um) produto\n");
+//        printf("4 - Editar 1(um) produto\n");
+//		printf("5 - Cadastrar 1(um) cliente\n");
+//        printf("6 - Excluir 1(um) cliente\n");
+//        printf("7 - Consultar 1(um) cliente\n");
+//        printf("8 - Editar 1(um) cliente\n");
+//        
+//		printf("9 - Cadastrar 1(uma) venda\n");
+//        printf("10 - Excluir 1(uma) venda\n");
+//        printf("11 - Consultar 1(uma) venda\n");
+//        printf("12 - Editar 1(uma) venda\n");
+    	printf("13 - Exibir todos os produtos cadastrados\n\n");
+    	printf("14 - Exibir indices dos produtos cadastrados\n\n");
+    	printf("16 - Consultar produto pelo codigo no arquivo 'indice_produtos.dat'\n\n");
+    	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ em Bytes e quantidade de registros\n\n");
         printf("0 - FECHAR PROGRAMA\n\n");
-        
         printf("OPCAO?\n> ");
         scanf("%d", &op);
         
@@ -204,15 +199,6 @@ void menu()
             case 14:
             	exibirIndiceProdutos();
             	break;
-            case 15:
-            	arqTeste = fopen(arqProdutos, "rb");
-            	
-            	tam = tamanhoArquivo(arqTeste, arqProdutos);
-            	if (tam != -1) {
-            		printf("Tamanho em bytes: %d", tam);
-				}
-				system("pause");
-            	break;
             case 16:
             	printf("Qual o codigo do produto que busca:\n> ");
             	scanf("%d", &cod);
@@ -227,20 +213,12 @@ void menu()
 				system("pause");
             	break;
             case 20:
-//            	FILE *f;
-//            	
-//            	Produto auxProduto;
-//            	
-//            	f = fopen("produtos.dat", "rb");
-//            	
-//				fseek(f, 0L, SEEK_END);//posiciona o ponteiro para final do arquivo
-//				
-//				size_t fSize = ftell(f);
-//				
-//				printf("Tamanho do arquivo [produtos.dat]: %d (Bytes)", fSize);
-//				printf("Nr. registros: %d\n\n", (fSize/sizeof(Produto)));
-//				
-//				fclose(f);
+            	tam = tamanhoArquivo(arqProdutos);
+            	if (tam != -1) {
+            		printf("Tamanho do arquivo ´produtos.dat´ em Bytes: %d\n", tam);
+            		printf("Quantidade de Registros: %d\n\n", (tam / sizeof(Produto)) );
+				}
+				system("pause");
 				break;
         }
     } while(op != 0);
@@ -280,7 +258,7 @@ void inserirVenda()
 
 }//cadastrarVenda
 
-int tamanhoArquivo(FILE *fp, const char *filename)
+int tamanhoArquivo(const char *filename)
 {
 	struct stat sb;
 
@@ -288,18 +266,22 @@ int tamanhoArquivo(FILE *fp, const char *filename)
         perror("stat");
         exit(EXIT_FAILURE);
     }
-    
 	return sb.st_size;
 }
 int consultaProduto(const char *filename, int chave)
 {//busca binaria por indice
+
 	FILE *fp = fopen(filename, "rb");
+	
 	int inicio, meio, fim;
 	
 	Indice *aux;
 	
 	inicio = 0;
-	fim = (tamanhoArquivo(fp, arqIndiceProdutos) / sizeof(Indice)) - 1;
+	
+	fseek(fp, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
+	
+	fim = (tamanhoArquivo(filename) / sizeof(Indice)) - 1;
 	
 	while (inicio <= fim)
 	{
@@ -336,22 +318,24 @@ void inserirProduto() {
 	//inserir no final do arquivo de dados respectivo
 	//inserir no arquivo de ï¿½ndice informando o cï¿½digo e a posiï¿½ï¿½o no arquivo de dados
 		//inserir no final do arquivo
-		//usar o mï¿½todo da bolha para ordenacao do arquivo de indice
+		//usar o metodo da bolha para ordenacao do arquivo de indice
 	
 	Produto auxProduto;
 	Indice auxIndice;
+	
 	FILE *arquivo;
 	FILE *arquivo_indice;
 	
 	arquivo = fopen(arqProdutos, "ab+");
 	arquivo_indice = fopen(arqIndiceProdutos, "ab+");
 	
+	system("cls");
+	
 	if (!arquivo || !arquivo_indice) {
 		printf("Nao foi possivel abrir o arquivo ´produtos.dat´ ou ´indice_produtos.dat´ para escrita");
 		return ;
 	}
 	
-	system("cls");
 	printf("Voce escolheu a opcao de inserir dados para novo Produto\n\n");
 	
 	fflush(stdin); //limpar buffer do teclado
@@ -378,7 +362,8 @@ void inserirProduto() {
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
-	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
+//	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
+	auxIndice.posicao = 1; //mudar posteriormente
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
