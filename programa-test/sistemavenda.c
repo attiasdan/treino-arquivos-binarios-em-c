@@ -66,10 +66,11 @@ void menu()
             case 16:
             	printf("Qual o codigo do produto que busca:\n> ");
             	scanf("%d", &codBusca);
+            	
             	posicao = consultaProduto(arqIndiceProdutos, codBusca);
             	
             	if (posicao != -1) {
-            		printf("Produto cadastrado, encontra-se na posicao: %d", posicao);
+            		printf("\nProduto cadastrado, encontra-se na posicao: %d\n", posicao);
 				}
 				else {
 					printf("Produto nao cadastrado, codigo nao encontrado");
@@ -131,7 +132,7 @@ int tamanhoArquivo(const char *filename)
     }
 	return sb.st_size;
 }
-int consultaProduto(const char *filename, int chave)
+int consultaIndiceProduto(const char *filename, int chave)
 {//busca binaria por indice
 
 	FILE *fp = fopen(filename, "rb");
@@ -154,16 +155,13 @@ int consultaProduto(const char *filename, int chave)
 		
 		fread(aux, sizeof(Indice), 1, fp);
 		
-		if (chave > aux->indice) {
+		if (chave > aux->indice)
 			inicio = meio + 1;
-		}
 		else {
-			if (chave < aux->indice) {
+			if (chave < aux->indice)
 				fim = meio - 1;
-			}
-			else {
-				return aux->posicao; //achou
-			}
+			else
+				return aux->posicao;
 		}
 	}
 	return -1;
@@ -223,7 +221,8 @@ void inserirProduto() {
 
 	//gravando os dados no arquivo 'indice_produtos.dat'
 	auxIndice.indice = auxProduto.codigo;
-	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
+//	auxIndice.posicao = consultaProduto(arqIndiceProdutos, auxIndice.indice);
+	auxIndice.posicao = consultaIndiceProduto(arqIndiceProdutos, auxIndice.indice);
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
 	fclose(arquivo);
