@@ -24,21 +24,21 @@ Arq 6 - indices_vendas:
 #define MAX_VENDA 100
 
 typedef struct {
-    int id; //ok
+    int codigo; //identificador
     char nome[100]; //ok
     char telefone[13]; //ok
     char endereco[100]; //ok
 } Cliente;
 
 typedef struct {
-    int id; //ok
+    int codigo; //identificador
     char nome[50]; //ok
     int quantidade; //ok
     float valor; //ok
 } Produto;
 
 typedef struct {
-    int nroVenda; //indice
+    int nroVenda; //identificador
     char dataVendas[10]; //ok
     
     int codCliente; //ok
@@ -73,7 +73,8 @@ void consultarVenda();
 void editarVenda();
 
 void ordenar(); //ordenacao bolha
-void consultar(); //busca binaria
+
+int buscaBinariaPorId(FILE *fp, int chave, Produto *p); //busca binaria por codigo
 
 int main()
 {
@@ -120,7 +121,7 @@ void printarTodoArquivo()
 	Cliente auxCliente;
 	
 	while ( fread(&auxCliente, sizeof(Cliente), 1, arquivo) > 0 ) {
-		printf("%d", auxCliente.id);
+		printf("%d", auxCliente.codigo);
 		printf("%s", auxCliente.nome);
 		printf("%s", auxCliente.telefone);
 		printf("%s", auxCliente.endereco);
@@ -157,8 +158,7 @@ void menu()
         switch (op)
         {
             case 1:
-//                inserirProduto();
-				printf("Opcao 1");
+                inserirProduto();
                 break;
             case 2:
                 break;
@@ -166,7 +166,7 @@ void menu()
     } while(op!=0);
 }
 
-void cadastrarVenda()
+void inserirVenda()
 {
     system("cls");
     char datavendas[10];
@@ -184,7 +184,7 @@ void cadastrarVenda()
 
 //        for(int i = 0, i < MAX_VENDA;++i)
 //        {
-//            if(vendas[i].identificador==0)
+//            if(vendas[i].codigoentificador==0)
 //			{
 //                vendas[i].datavenda;
 //                vendas[i].qtdproduto;
@@ -198,13 +198,44 @@ void cadastrarVenda()
 
 }//cadastrarVenda
 
-void consultar(int codigo) { //busca por cï¿½digo
+void consultar(int codigo) { //busca por codigo
 	
 }
-void inserir() {
-	//solicitar do usuï¿½rio o cï¿½digo
-		//verificar se o cï¿½digo jï¿½ existe no respectivo arquivo de ï¿½ndice
-			//fazer pesquisa binï¿½ria no prï¿½prio arquivo:
+
+int buscaBinariaPorId(FILE *fp, int chave, Produto *p)
+{//busca binaria por codigo
+	int inicio, meio, fim;
+	
+	inicio = 0;
+	
+	fim = (tamanhoArquivo(fp) / sizeof(Produto)) - 1;
+	
+	while (inicio <= fim) {
+		meio = (inicio + fim) / 2;
+		
+		fseek(fp, meio * sizeof(Produto), SEEK_SET);
+		
+		fread(p, sizeof(Produto), 1, fp);
+		
+		if (chave > p->codigo) {
+			inicio = meio + 1;
+		}
+		else {
+			if (chave < p->codigo) {
+				fim = meio - 1;
+			}
+			else {
+				return 1; //achou
+			}
+		}
+	}
+	return 0;
+}
+
+void inserirProduto() {
+	//1º solicitar o codigo
+		//2º verificar se o codigo ja existe no respectivo arquivo de indice
+			//fazer pesquisa binaria no proprio arquivo:
 				//obter o tamanho do arquivo (atributos.c)
 				//obter o registro do meio
 				//pesquisar chave atï¿½ encontrar cï¿½digo ou finalizar a pesquisa
@@ -219,13 +250,16 @@ void inserir() {
 	int codigo = 0;
 	int continuar;
 	Produto auxProduto;
-	
 	FILE *arquivo;
-	arquivo = fopen("credit.dat", "ab");
 	
+	arquivo = fopen("produtos.dat", "ab");
 	
-	
-	printf("Entre com o codigo do registro:\n> ");
+	if (!arquivo) {
+		printf("Nao foi possivel abrir o arquivo 'produtos.dat' ");
+		return ;
+	}
+
+	printf("Entre com o codigo do registro de produto:\n> ");
 	scanf("%d", &codigo);
 	
 	do {
@@ -240,23 +274,23 @@ void inserir() {
 	} while(continuar);
 }
 void atualizar() {
-//alteraï¿½ï¿½o de registro
-		//solicitar do usuï¿½rio o cï¿½digo
-		//verificar se o mesmo jï¿½ existe no respectivo arquivo de ï¿½ndice
-		//caso nï¿½o exista, informar ao usuï¿½rio;
-		//existindo o cï¿½digo:
+//alteracao de registro
+		//solicitar do usuario o codigo
+		//verificar se o mesmo ja existe no respectivo arquivo de indice
+		//caso nao exista, informar ao usuario;
+		//existindo o codigo:
 			//mostrar os valores dos campos;
-			//perguntar qual campo alterar (sï¿½ pode um por vez)
-			//pedir a nova informaï¿½ï¿½o e alterar no arquivo de dados.
+			//perguntar qual campo alterar (so pode um por vez)
+			//pedir a nova informacao e alterar no arquivo de dados.
 }
 void excluir() {
 /*
 Excluir registro:
 - Pedir primeiro o codigo;
-- Verificar se o mesmo ja existe no respectivo arquivo de ï¿½ndice;
-- Caso nï¿½o exista, informar ao usuï¿½rio;
-- Existindo o cï¿½digo:
-- pedir confirmaï¿½ï¿½o de exclusï¿½o
+- Verificar se o mesmo ja existe no respectivo arquivo de indice;
+- Caso nao exista, informar ao usuario;
+- Existindo o codigo:
+- pedir confirmacao de exclusivo
 - excluir o registro do arquivo de dados (vamos discutir em sala)
 - recriar o arquivo de ï¿½ndice (vamos discutir em sala)
 */
