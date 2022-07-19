@@ -118,18 +118,11 @@ void exibirProdutos()
 		printf("Nao foi possivel abrir o arquivo para leitura");
 	}
 	
-//	Cliente auxCliente;
-	
-//	while ( fread(&auxCliente, sizeof(Cliente), 1, arquivo) > 0 ) {
-//		printf("%d", auxCliente.codigo);
-//		printf("%s", auxCliente.nome);
-//		printf("%s", auxCliente.telefone);
-//		printf("%s", auxCliente.endereco);
-//	}
 	Produto auxProduto;
 	
 	system("cls");
 	printf("Codigo\t|\tNome do Produto\t|\tQtd do Produto\t|\tPreco do Produto\n");
+	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	while (fread(&auxProduto, sizeof(Produto), 1, arquivo) > 0)
 	{
 		printf("%d\t%s\t%d\t%f", auxProduto.codigo, auxProduto.nome, auxProduto.quantidade, auxProduto.valor);
@@ -160,6 +153,8 @@ void menu()
         printf("12 - Editar 1(uma) venda\n\n");
     	
     	printf("13 - Exibir todos os produtos cadastrados\n\n");
+    	
+    	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ e quantidade de registros\n\n");
         printf("0 - FECHAR PROGRAMA\n\n");
         
         printf("OPCAO?\n> ");
@@ -175,6 +170,25 @@ void menu()
             case 13:
             	exibirProdutos();
             	break;
+            	
+            case 20:
+            	
+            	FILE *f;
+            	
+            	Produto auxProduto;
+            	
+            	f = fopen("produtos.dat", "rb");
+            	
+				fseek(f, 0L, SEEK_END);//posiciona o ponteiro para final do arquivo
+				
+				size_t fSize = ftell(f);
+				
+				printf("Tamanho do arquivo [produtos.dat]: %d (Bytes)", fSize);
+				printf("Nr. registros: %d\n\n", (fSize/sizeof(Produto)));
+				
+				fclose(f);
+				
+				break;
         }
     } while(op!=0);
 }
