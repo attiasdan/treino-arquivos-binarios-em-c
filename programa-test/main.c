@@ -135,6 +135,9 @@ void menu()
 {
     int op;
     
+	FILE *arqTeste;
+	int tam = -1;
+	
     do {
     	system("cls");
     	printf("Bem vindo(a)!\n\nSelecione uma opcao do menu, digitando o numero e, logo em seguida, pressione a tecla ENTER\n\n");
@@ -155,9 +158,9 @@ void menu()
     	
     	printf("13 - Exibir todos os produtos cadastrados\n");
     	printf("14 - Exibir indices dos produtos cadastrados\n");
+    	printf("15 - Exibir tamanho do arquivo 'produtos.dat' em Bytes\n");
     	
-    	
-    	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ e quantidade de registros\n\n");
+    	printf("20 - Exibir tamanho do arquivo de ´produtos.dat´ e quantidade de registros\n");
         printf("0 - FECHAR PROGRAMA\n\n");
         
         printf("OPCAO?\n> ");
@@ -176,8 +179,16 @@ void menu()
             case 14:
             	exibirIndiceProdutos();
             	break;
-            case 20:
+            case 15:
+            	arqTeste = fopen(arqProdutos, "rb");
             	
+            	tam = tamanhoArquivo(arqTeste, arqProdutos);
+            	if (tam != -1) {
+            		printf("Tamanho em bytes: %d", tam);
+				}
+				system("pause");
+            	break;
+            case 20:
 //            	FILE *f;
 //            	
 //            	Produto auxProduto;
@@ -192,10 +203,11 @@ void menu()
 //				printf("Nr. registros: %d\n\n", (fSize/sizeof(Produto)));
 //				
 //				fclose(f);
-				
 				break;
         }
-    } while(op!=0);
+    } while(op != 0);
+    
+	fclose(arqTeste);
 }
 
 void inserirVenda()
