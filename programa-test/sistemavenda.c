@@ -32,10 +32,10 @@ void menu()
     	system("cls");
     	printf("Bem vindo(a)!\n\nSelecione uma opcao do menu, digitando o numero e, logo em seguida, pressione a tecla ENTER\n\n");
         printf("(ok) 1 - Cadastrar 1(um) produto\n");
-        printf("2 - Excluir 1(um) produto\n");
-        printf("3 - Consultar 1(um) produto\n");
+//        printf("2 - Excluir 1(um) produto\n");
+//        printf("3 - Consultar 1(um) produto\n");
         printf("(fazendo) 4 - Editar 1(um) produto\n");
-		printf("5 - Cadastrar 1(um) cliente\n");
+//		printf("5 - Cadastrar 1(um) cliente\n");
 //        printf("6 - Excluir 1(um) cliente\n");
 //        printf("7 - Consultar 1(um) cliente\n");
 //        printf("8 - Editar 1(um) cliente\n");
@@ -284,8 +284,9 @@ void inserirProduto() {
 	
 	if (qtdProdutosCadastrados == 0) {
 		auxIndice.posicao = 0;
-	} else {
-		auxIndice.posicao = (qtdProdutosCadastrados * sizeof(Produto)) + sizeof(Produto);
+	}
+	else {
+		auxIndice.posicao = (qtdProdutosCadastrados * sizeof(Produto));
 	}
 	fwrite(&auxIndice, sizeof(Indice), 1, arquivo_indice);
 	
