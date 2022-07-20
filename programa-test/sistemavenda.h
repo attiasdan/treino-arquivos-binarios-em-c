@@ -50,7 +50,8 @@ int consultarIndiceProduto(int chave); //100% funcionando
 int solicitarCodigo(); //100% funcionando
 int consultarProduto(); //100% funcionando
 //void excluirProduto();
-void editarProduto(); //fazendo
+void editarProduto(); //100% funcionando
+void exibirProduto(Produto p);
 
 //Protótipos das Funções de Cliente:
 void inserirCliente();

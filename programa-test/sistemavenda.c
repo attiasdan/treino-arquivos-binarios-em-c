@@ -11,7 +11,6 @@
 const char *arqProdutos = "produtos.dat";
 const char *arqClientes = "clientes.dat";
 const char *arqVendas = "vendas.dat";
-
 const char *arqIndiceProdutos = "indice_produtos.dat";
 const char *arqIndiceClientes = "indice_clientes.dat";
 const char *arqIndiceVendas = "indice_vendas.dat";
@@ -21,6 +20,7 @@ Produto produtos[MAX_PRODUTO];
 Venda vendas[MAX_VENDA];
 
 int qtdProdutosCadastrados = 0;
+int codAux = -1;
 
 void menu()
 {
@@ -34,7 +34,7 @@ void menu()
         printf("(ok) 1 - Cadastrar 1(um) produto\n");
 //        printf("2 - Excluir 1(um) produto\n");
         printf("(ok) 3 - Consultar 1(um) produto\n");
-        printf("(fazendo) 4 - Editar 1(um) produto\n");
+        printf("(ok) 4 - Editar 1(um) produto\n");
 //		printf("5 - Cadastrar 1(um) cliente\n");
 //        printf("6 - Excluir 1(um) cliente\n");
 //        printf("7 - Consultar 1(um) cliente\n");
@@ -57,7 +57,7 @@ void menu()
                 inserirProduto();
                 break;
             case 3:
-            	consultarProduto();
+            	consultarProduto(-1);
             	break;
             case 4:
             	editarProduto();
@@ -113,7 +113,7 @@ void editarProduto()
 	
 	if (posicao != -1)
 	{ //permitido editar
-		FILE *arquivo = abrirArquivoEscrita(arqProdutos);
+		FILE *arquivo = fopen(arqProdutos, "rb+");
 		Produto auxProduto;
 		
 		rewind(arquivo);
@@ -122,20 +122,7 @@ void editarProduto()
 		fseek(arquivo, posicao, SEEK_SET);
 		
 		//Novos dados:
-		int volta = 1;
-		do {
-			printf("\nCodigo do Novo Produto:\n> ");
-			fflush(stdin); //limpar buffer do teclado
-			scanf("%d", &auxProduto.codigo);
-			
-			if (consultarIndiceProduto(auxProduto.codigo) != -1) {
-				printf("Codigo indisponivel, tente outro...\n");
-				volta = 1;
-			} else {
-				volta = 0;
-			}
-		} while (volta);
-		
+		auxProduto.codigo = codAux;
 		printf("Nome do Novo Produto:\n> ");
 		fflush(stdin);
 		gets(auxProduto.nome);
@@ -252,6 +239,7 @@ int consultarIndiceProduto(int chave)
 }
 int consultarProduto() {
 	int cod = solicitarCodigo();
+	codAux = cod;
 	int posicao = -1;
 	FILE *arquivo = abrirArquivoLeitura(arqProdutos);
 	Produto auxProduto;
@@ -274,16 +262,19 @@ int consultarProduto() {
 	//le dados:
 	fread(&auxProduto, sizeof(Produto), 1, arquivo);
 	
-	printf("Codigo do produto = %d\n", auxProduto.codigo);
-	printf("Nome do produto = %s\n", auxProduto.nome);
-	printf("Quantidade do produto = %d\n", auxProduto.quantidade);
-	printf("Preco do produto = %.2f\n\n", auxProduto.valor);
+	exibirProduto(auxProduto);
 	
 	fflush(stdin);
 	system("pause");
 	fclose(arquivo);
 	
 	return posicao;
+}
+void exibirProduto(Produto p) {
+	printf("Codigo do produto = %d\n", p.codigo);
+	printf("Nome do produto = %s\n", p.nome);
+	printf("Quantidade do produto = %d\n", p.quantidade);
+	printf("Preco do produto = %.2f\n\n", p.valor);
 }
 void inserirProduto() {
 	Produto auxProduto;
