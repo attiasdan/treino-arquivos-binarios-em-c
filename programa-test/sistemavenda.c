@@ -109,6 +109,50 @@ FILE *abrirArquivoEscrita(const char *filename) {
 
 void editarProduto()
 {
+	int posicao = consultarProduto();
+	
+	if (posicao != -1)
+	{ //permitido editar
+		FILE *arquivo = abrirArquivoEscrita(arqProdutos);
+		Produto auxProduto;
+		
+		rewind(arquivo);
+	
+		//posiciona ponteiro a partir de onde ler:
+		fseek(arquivo, posicao, SEEK_SET);
+		
+		//Novos dados:
+		int volta = 1;
+		do {
+			printf("\nCodigo do Novo Produto:\n> ");
+			fflush(stdin); //limpar buffer do teclado
+			scanf("%d", &auxProduto.codigo);
+			
+			if (consultarIndiceProduto(auxProduto.codigo) != -1) {
+				printf("Codigo indisponivel, tente outro...\n");
+				volta = 1;
+			} else {
+				volta = 0;
+			}
+		} while (volta);
+		
+		printf("Nome do Novo Produto:\n> ");
+		fflush(stdin);
+		gets(auxProduto.nome);
+		
+		printf("Quantidade do Novo Produto:\n> ");
+		fflush(stdin);
+		scanf("%d", &auxProduto.quantidade);
+		
+		printf("Preco do Novo Produto:\n> ");
+		fflush(stdin);
+		scanf("%f", &auxProduto.valor);
+		
+		//le dados:
+		fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
+		
+		fclose(arquivo);
+	}
 }
 void inserirVenda()
 {
@@ -238,6 +282,8 @@ int consultarProduto() {
 	fflush(stdin);
 	system("pause");
 	fclose(arquivo);
+	
+	return posicao;
 }
 void inserirProduto() {
 	Produto auxProduto;
