@@ -148,7 +148,7 @@ void editarProduto()
 		fflush(stdin);
 		scanf("%f", &auxProduto.valor);
 		
-		//le dados:
+		//grava os dados:
 		fwrite(&auxProduto, sizeof(Produto), 1, arquivo);
 		
 		fclose(arquivo);
