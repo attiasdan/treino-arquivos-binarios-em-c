@@ -122,13 +122,18 @@ void editarProduto()
 //	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	rewind(arquivo);
 	//posiciona ponteiro a partir de onde ler:
-	fseek(arquivo, (int)(posicao/sizeof(Produto)), SEEK_SET);
+	fseek(arquivo, (int)(posicao / sizeof(Produto)), SEEK_SET);
+	
+	fflush(stdin);
 	//le dados:
 	fread(&auxProduto, sizeof(Produto), 1, arquivo);
+	
 	printf("Codigo do produto = %d\n", auxProduto.codigo);
 	printf("Nome do produto = %s\n", auxProduto.nome);
 	printf("Quantidade do produto = %d\n", auxProduto.quantidade);
 	printf("Preco do produto = %.2f\n", auxProduto.valor);
+	
+	fflush(stdin);
 	system("pause");
 	fclose(arquivo);
 }
