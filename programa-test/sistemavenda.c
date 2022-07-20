@@ -33,7 +33,7 @@ void menu()
     	printf("Bem vindo(a)!\n\nSelecione uma opcao do menu, digitando o numero e, logo em seguida, pressione a tecla ENTER\n\n");
         printf("(ok) 1 - Cadastrar 1(um) produto\n");
 //        printf("2 - Excluir 1(um) produto\n");
-//        printf("3 - Consultar 1(um) produto\n");
+        printf("(fazendo)3 - Consultar 1(um) produto\n");
         printf("(fazendo) 4 - Editar 1(um) produto\n");
 //		printf("5 - Cadastrar 1(um) cliente\n");
 //        printf("6 - Excluir 1(um) cliente\n");
@@ -122,7 +122,7 @@ void editarProduto()
 //	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	rewind(arquivo);
 	//posiciona ponteiro a partir de onde ler:
-	fseek(arquivo, (int)(posicao / sizeof(Produto)), SEEK_SET);
+	fseek(arquivo, posicao, SEEK_SET);
 	
 	fflush(stdin);
 	//le dados:
@@ -131,7 +131,7 @@ void editarProduto()
 	printf("Codigo do produto = %d\n", auxProduto.codigo);
 	printf("Nome do produto = %s\n", auxProduto.nome);
 	printf("Quantidade do produto = %d\n", auxProduto.quantidade);
-	printf("Preco do produto = %.2f\n", auxProduto.valor);
+	printf("Preco do produto = %.2f\n\n", auxProduto.valor);
 	
 	fflush(stdin);
 	system("pause");
