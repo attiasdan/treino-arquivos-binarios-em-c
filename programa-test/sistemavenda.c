@@ -103,10 +103,14 @@ FILE *abrirArquivoEscrita(const char *filename) {
 		printf("Nao foi possivel abrir o arquivo");
 	return fp;
 }
+
 void editarProduto()
 {
 	int cod = solicitarCodigo();
 	int posicao = -1;
+	FILE *arquivo = abrirArquivoLeitura(arqProdutos);
+	Produto auxProduto;
+	
 	posicao = consultaIndiceProduto(cod);
 	
 	if (posicao == -1) {
@@ -114,13 +118,11 @@ void editarProduto()
 		return ;
 	}
 	
-	FILE *arquivo = abrirArquivoLeitura(arqProdutos);
-	Produto auxProduto;
-	
-	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
+	printf("Posicao = %d\n", posicao);
+//	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
 	rewind(arquivo);
 	//posiciona ponteiro a partir de onde ler:
-	fseek(arquivo, posicao * sizeof(Produto), SEEK_SET);
+	fseek(arquivo, (int)(posicao/sizeof(Produto)), SEEK_SET);
 	//le dados:
 	fread(&auxProduto, sizeof(Produto), 1, arquivo);
 	printf("Codigo do produto = %d\n", auxProduto.codigo);
@@ -228,8 +230,6 @@ int consultaIndiceProduto(int chave)
 }
 
 void inserirProduto() {
-	//usar o metodo da bolha para ordenacao do arquivo de indice
-	
 	Produto auxProduto;
 	Indice auxIndice;
 	
@@ -239,6 +239,7 @@ void inserirProduto() {
 	arquivo = abrirArquivoEscrita(arqProdutos);
 	arquivo_indice = abrirArquivoEscrita(arqIndiceProdutos);
 	
+	qtdProdutosCadastrados = tamanhoArquivo(arqProdutos) / sizeof(Produto);
 	system("cls");
 	
 	if (!arquivo || !arquivo_indice) {
@@ -261,10 +262,6 @@ void inserirProduto() {
 			volta = 0;
 		}
 	} while (volta);
-	
-	
-	//verificar se o codigo ja existe no arquivo 'indice_produtos.dat'
-	//se existir informar que ja existe um produto com esse codigo
 	
 	printf("Nome do Novo Produto:\n> ");
 	fflush(stdin);
@@ -295,6 +292,8 @@ void inserirProduto() {
 	//liberando os ponteiros do arquivos
 	fclose(arquivo);
 	fclose(arquivo_indice);
+	
+	//usar o metodo da bolha para ordenacao do arquivo de indice
 }
 void atualizar() {
 //alteracao de registro
