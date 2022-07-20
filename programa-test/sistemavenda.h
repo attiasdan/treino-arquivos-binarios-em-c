@@ -49,7 +49,7 @@ void exibirProdutos(); //100% funcionando
 int consultarIndiceProduto(int chave); //100% funcionando
 int solicitarCodigo(); //100% funcionando
 int consultarProduto(); //100% funcionando
-//void excluirProduto();
+void excluirProduto();
 void editarProduto(); //100% funcionando
 void exibirProduto(Produto p);
 

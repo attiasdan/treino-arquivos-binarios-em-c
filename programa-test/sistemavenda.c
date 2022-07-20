@@ -57,7 +57,7 @@ void menu()
                 inserirProduto();
                 break;
             case 3:
-            	consultarProduto(-1);
+            	consultarProduto();
             	break;
             case 4:
             	editarProduto();
