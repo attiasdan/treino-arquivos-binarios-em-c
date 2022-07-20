@@ -37,7 +37,7 @@ void menu();
 
 int tamanhoArquivo(const char *filename); //100% funcionando
 
-void ordenar(int *V  , int N); //ordenacao bolha
+void ordenar(int *V  , int N); //nao esta funcionando
 
 FILE *abrirArquivoLeitura(const char *filename);
 FILE *abrirArquivoEscrita(const char *filename);
@@ -46,9 +46,9 @@ FILE *abrirArquivoEscrita(const char *filename);
 void inserirProduto(); //100% funcionando
 void exibirIndiceProdutos(); //100% funcionando
 void exibirProdutos(); //100% funcionando
-int consultaIndiceProduto(int chave); //100% funcionando
+int consultarIndiceProduto(int chave); //100% funcionando
 int solicitarCodigo(); //100% funcionando
-//int consultaProduto();
+int consultarProduto(); //100% funcionando
 //void excluirProduto();
 void editarProduto(); //fazendo
 

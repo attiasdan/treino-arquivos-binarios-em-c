@@ -33,7 +33,7 @@ void menu()
     	printf("Bem vindo(a)!\n\nSelecione uma opcao do menu, digitando o numero e, logo em seguida, pressione a tecla ENTER\n\n");
         printf("(ok) 1 - Cadastrar 1(um) produto\n");
 //        printf("2 - Excluir 1(um) produto\n");
-        printf("(fazendo)3 - Consultar 1(um) produto\n");
+        printf("(ok) 3 - Consultar 1(um) produto\n");
         printf("(fazendo) 4 - Editar 1(um) produto\n");
 //		printf("5 - Cadastrar 1(um) cliente\n");
 //        printf("6 - Excluir 1(um) cliente\n");
@@ -56,6 +56,9 @@ void menu()
             case 1:
                 inserirProduto();
                 break;
+            case 3:
+            	consultarProduto();
+            	break;
             case 4:
             	editarProduto();
                 break;
@@ -69,7 +72,7 @@ void menu()
             	printf("Qual o codigo do produto que busca:\n> ");
             	scanf("%d", &codBusca);
             	
-            	posicao = consultaIndiceProduto(codBusca);
+            	posicao = consultarIndiceProduto(codBusca);
             	
             	if (posicao != -1) {
             		printf("\nProduto cadastrado, encontra-se na posicao: %d\n\n", posicao);
@@ -106,36 +109,6 @@ FILE *abrirArquivoEscrita(const char *filename) {
 
 void editarProduto()
 {
-	int cod = solicitarCodigo();
-	int posicao = -1;
-	FILE *arquivo = abrirArquivoLeitura(arqProdutos);
-	Produto auxProduto;
-	
-	posicao = consultaIndiceProduto(cod);
-	
-	if (posicao == -1) {
-		printf("Codigo inexistente, impossivel editar.");
-		return ;
-	}
-	
-	printf("Posicao = %d\n", posicao);
-//	fseek(arquivo, 0L, SEEK_SET); //posiciona o ponteiro no inicio do arquivo
-	rewind(arquivo);
-	//posiciona ponteiro a partir de onde ler:
-	fseek(arquivo, posicao, SEEK_SET);
-	
-	fflush(stdin);
-	//le dados:
-	fread(&auxProduto, sizeof(Produto), 1, arquivo);
-	
-	printf("Codigo do produto = %d\n", auxProduto.codigo);
-	printf("Nome do produto = %s\n", auxProduto.nome);
-	printf("Quantidade do produto = %d\n", auxProduto.quantidade);
-	printf("Preco do produto = %.2f\n\n", auxProduto.valor);
-	
-	fflush(stdin);
-	system("pause");
-	fclose(arquivo);
 }
 void inserirVenda()
 {
@@ -199,7 +172,7 @@ int solicitarCodigo() {
 	scanf("%d", &cod);
 	return cod;
 }
-int consultaIndiceProduto(int chave)
+int consultarIndiceProduto(int chave)
 {//busca binaria por indice
 
 	FILE *fp = abrirArquivoLeitura(arqIndiceProdutos);
@@ -233,7 +206,39 @@ int consultaIndiceProduto(int chave)
 	}
 	return -1;
 }
-
+int consultarProduto() {
+	int cod = solicitarCodigo();
+	int posicao = -1;
+	FILE *arquivo = abrirArquivoLeitura(arqProdutos);
+	Produto auxProduto;
+	
+	posicao = consultarIndiceProduto(cod);
+	
+	if (posicao == -1) {
+		printf("Codigo inexistente, impossivel editar.");
+		return ;
+	}
+	
+	printf("Posicao = %d\n", posicao);
+	
+	rewind(arquivo);
+	
+	//posiciona ponteiro a partir de onde ler:
+	fseek(arquivo, posicao, SEEK_SET);
+	
+	fflush(stdin);
+	//le dados:
+	fread(&auxProduto, sizeof(Produto), 1, arquivo);
+	
+	printf("Codigo do produto = %d\n", auxProduto.codigo);
+	printf("Nome do produto = %s\n", auxProduto.nome);
+	printf("Quantidade do produto = %d\n", auxProduto.quantidade);
+	printf("Preco do produto = %.2f\n\n", auxProduto.valor);
+	
+	fflush(stdin);
+	system("pause");
+	fclose(arquivo);
+}
 void inserirProduto() {
 	Produto auxProduto;
 	Indice auxIndice;
@@ -260,7 +265,7 @@ void inserirProduto() {
 		fflush(stdin); //limpar buffer do teclado
 		scanf("%d", &auxProduto.codigo);
 		
-		if (consultaIndiceProduto(auxProduto.codigo) != -1) {
+		if (consultarIndiceProduto(auxProduto.codigo) != -1) {
 			printf("Codigo indisponivel, tente outro...\n");
 			volta = 1;
 		} else {
